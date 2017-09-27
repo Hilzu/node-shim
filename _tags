@@ -1,0 +1,2 @@
+<src/**>: include
+true: safe_string, package(yojson), package(unix)

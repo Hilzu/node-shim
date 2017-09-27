@@ -1,0 +1,4 @@
+PRJ node-shim
+S src
+PKG yojson
+B _build/src
