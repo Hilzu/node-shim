@@ -9,5 +9,5 @@ for PROGRAM in node npm yarn
 do
   TARGET="${INSTALL_PATH}/$PROGRAM"
   cp scripts/run-shim-template.sh $TARGET
-  perl -pi -e "s/\$PROGRAM_PLACEHOLDER/$PROGRAM/g" $TARGET
+  sed -i '' "s/\\\$PROGRAM_PLACEHOLDER/$PROGRAM/" $TARGET
 done
