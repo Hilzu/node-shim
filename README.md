@@ -1,6 +1,6 @@
 # node-shim
 
-Shim node, npm and yarn binaries to use the correct version according to `engines` field in `package.json`. The file is found by traversing the current directory hierarchy up and the first one found is used. If no `package.json` is found the shims default to the global node, npm or yarn.
+Shim node, npm and yarn binaries to use the correct version according to `engines` field in `package.json`. The file is found by traversing the current directory hierarchy up and the first one found is used. If no `package.json` is found or it doesn't have a version for the program the shims default to the global node, npm or yarn.
 
 This app is a work in progress so a lot of features that you would expect are missing. Some known issues are:
 
@@ -8,9 +8,10 @@ This app is a work in progress so a lot of features that you would expect are mi
 - Semver ranges aren't supported (range is discarded and the exact version specified is used)
 - node, npm and yarn have to be downloaded manually and be put to the correct location like `~/.local/opt/node-shim/yarn/1.1.0`
 - Global node, npm and yarn binaries are only searched from `/usr/local/bin`
-- `package.json` is required to have versions for all the programs supported by `node-shim` (node, npm and yarn)
 
 That said it works pretty well for me right now but might not work for you yet.
+
+To enable debug logging to `stderr` you can set `NODE_SHIM_DEBUG` environment variable to `"true"`.
 
 ## Installing
 
