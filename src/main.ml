@@ -1,9 +1,7 @@
 let parse_args () =
-  let program_args = ref "" in
-  let quote s = "\"" ^ s ^ "\"" in
-  let escape_arg s = s |> String.escaped |> quote in
+  let program_args = ref [] in
   let append_to_args a =
-    program_args := !program_args ^ " " ^ escape_arg a
+    program_args := a :: !program_args
   in
   let arg_spec = [
     ("--", Arg.Rest append_to_args, "Arguments passed to program");
@@ -12,7 +10,7 @@ let parse_args () =
   let set_program s = program := s in
   let usage = "Usage: node-shim program" in
   Arg.parse arg_spec set_program usage;
-  (Shim.program_of_string !program, !program_args)
+  (Shim.program_of_string !program, List.rev !program_args)
 
 let get_version engines program =
   let open Package in
@@ -41,12 +39,11 @@ let _ =
   try
     let (program, program_args) = parse_args () in
     Logger.debug ("Finding executable for: " ^ Shim.string_of_program program);
-    Logger.debug ("Arguments to pass to program: " ^ program_args);
+    Logger.debug ("Arguments to pass to program: " ^ String.concat ", " program_args);
     let exec = get_exec program in
     Logger.debug ("Found executable: " ^ exec);
-    let cmd = exec ^ program_args in
-    let exit_code = Sys.command cmd in
-    exit exit_code
+    flush_all ();
+    Unix.execv exec (Array.of_list (exec :: program_args))
   with e ->
     Logger.error e;
     Logger.debug (Printexc.get_backtrace ());
