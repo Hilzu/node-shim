@@ -21,19 +21,22 @@ let get_version engines program =
   | Yarn -> engines.yarn
 
 let get_exec program =
+  let global_exec = "/usr/local/bin/" ^ Shim.string_of_program program in
   let path_opt =
     try Some (Package.find_package_json ()) with Not_found -> None
   in
   match path_opt with
-  | None -> "/usr/local/bin/" ^ Shim.string_of_program program
+  | None -> global_exec
   | Some path ->
     Logger.debug ("Found package.json: " ^ path);
     let ch = open_in path in
     let engines = Package.parse_engines_from_chan ch in
     Logger.debug ("Found engines: " ^ Package.string_of_engines engines);
-    let version = get_version engines program in
-    let version_str = Semver.string_of_semver version in
-    Shim.find_executable program version_str
+    match get_version engines program with
+    | None -> global_exec
+    | Some version ->
+      let version_str = Semver.string_of_semver version in
+      Shim.find_executable program version_str
 
 let _ =
   try

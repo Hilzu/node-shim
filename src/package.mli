@@ -1,6 +1,6 @@
 val find_package_json : unit -> string
 
-type engines = {node : Semver.semver; npm : Semver.semver; yarn : Semver.semver}
+type engines = {node : Semver.semver option; npm : Semver.semver option; yarn : Semver.semver option}
 
 val string_of_engines : engines -> string
 
