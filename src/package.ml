@@ -16,7 +16,6 @@ let find_package_json () =
 
 let parse_engines_from_chan ch =
   let json = J.from_channel ch in
-  (* print_endline (J.pretty_to_string json); *)
   let open J.Util in
   let engines_member = json |> member "engines" in
   let parse_semver_from m = semver_of_string (engines_member |> member m |> to_string) in

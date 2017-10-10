@@ -17,7 +17,6 @@ let is_root_dir dir =
 
 let rec find_file_by_traversing_up dir filename =
   let current_path = Filename.concat dir filename in
-  (* Printf.printf "Searching dir %s\n" dir; *)
   if not (Sys.is_directory dir)
     then raise (Not_a_directory dir)
   else if Sys.file_exists current_path

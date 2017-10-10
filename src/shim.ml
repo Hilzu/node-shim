@@ -26,8 +26,6 @@ let bin_path program =
   | Yarn -> "bin/yarn"
 
 let find_executable program version =
-  (* Printf.printf "shim_root: %s\n" shim_root; *)
   let exec_path = File.join [shim_root; string_of_program program; version; bin_path program] in
-  (* Printf.printf "exec_path %s\n" exec_path; *)
   if not (Sys.file_exists exec_path) then raise (Executable_not_found exec_path)
   else exec_path
