@@ -17,12 +17,9 @@ let is_root_dir dir =
 
 let rec find_file_by_traversing_up dir filename =
   let current_path = Filename.concat dir filename in
-  if not (Sys.is_directory dir)
-    then raise (Not_a_directory dir)
-  else if Sys.file_exists current_path
-    then current_path
-  else if is_root_dir dir
-    then raise Not_found
+  if not (Sys.is_directory dir) then raise (Not_a_directory dir)
+  else if Sys.file_exists current_path then current_path
+  else if is_root_dir dir then raise Not_found
   else
     find_file_by_traversing_up (parent_dir dir) filename
 
