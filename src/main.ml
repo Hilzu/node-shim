@@ -49,5 +49,5 @@ let _ =
     Unix.execv exec (Array.of_list (exec :: program_args))
   with e ->
     Logger.error e;
-    Logger.debug (Printexc.get_backtrace ());
+    Logger.debug (String.trim (Printexc.get_backtrace ()));
     exit 2
