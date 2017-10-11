@@ -10,18 +10,18 @@ let parse_args () =
   let set_program s = program := s in
   let usage = "Usage: node-shim program" in
   Arg.parse arg_spec set_program usage;
-  (Shim.program_of_string !program, List.rev !program_args)
+  (Program.of_string !program, List.rev !program_args)
 
 let get_version engines program =
   let open Package in
-  let open Shim in
+  let open Program in
   match program with
   | Node -> engines.node
   | Npm -> engines.npm
   | Yarn -> engines.yarn
 
 let get_exec program =
-  let global_exec = "/usr/local/bin/" ^ Shim.string_of_program program in
+  let global_exec = "/usr/local/bin/" ^ Program.to_string program in
   let path_opt =
     try Some (Package.find_package_json ()) with Not_found -> None
   in
@@ -41,7 +41,7 @@ let get_exec program =
 let _ =
   try
     let (program, program_args) = parse_args () in
-    Logger.debug ("Finding executable for: " ^ Shim.string_of_program program);
+    Logger.debug ("Finding executable for: " ^ Program.to_string program);
     Logger.debug ("Arguments to pass to program: " ^ String.concat ", " program_args);
     let exec = get_exec program in
     Logger.debug ("Found executable: " ^ exec);
