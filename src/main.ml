@@ -45,7 +45,7 @@ let _ =
     Logger.debug ("Arguments to pass to program: " ^ String.concat ", " program_args);
     let exec = get_exec program in
     Logger.debug ("Found executable: " ^ exec);
-    flush_all ();
+    flush_all (); (* Ensure that all output is written before moving control to exec *)
     Unix.execv exec (Array.of_list (exec :: program_args))
   with e ->
     Logger.error e;
