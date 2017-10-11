@@ -35,7 +35,7 @@ let get_exec program =
     match get_version engines program with
     | None -> global_exec
     | Some version ->
-      let version_str = Semver.string_of_semver version in
+      let version_str = Semver.to_string version in
       Shim.find_executable program version_str
 
 let _ =

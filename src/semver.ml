@@ -1,9 +1,9 @@
-type semver = {major : int; minor : int; patch : int}
+type t = {major : int; minor : int; patch : int}
 
-let make_semver major minor patch =
+let make major minor patch =
   { major; minor; patch }
 
-let string_of_semver s =
+let to_string s =
   Printf.sprintf "%d.%d.%d" s.major s.minor s.patch
 
 exception Invalid_semver of string
@@ -11,7 +11,7 @@ exception Invalid_semver of string
 let starts_with_char s c =
   String.length s > 0 && s.[0] = c
 
-let semver_of_string s =
+let of_string s =
   let parts =
     let str_parts = String.split_on_char '.' s in
     let [major_str; minor_str; patch_str] =
@@ -25,5 +25,5 @@ let semver_of_string s =
   in
   let nums = List.map int_of_string parts in
   match nums with
-  | [major; minor; patch] -> make_semver major minor patch
+  | [major; minor; patch] -> make major minor patch
   | _ -> raise (Invalid_semver s)

@@ -1,5 +1,5 @@
-type semver
+type t
 
-val string_of_semver : semver -> string
+val to_string : t -> string
 
-val semver_of_string : string -> semver
+val of_string : string -> t
