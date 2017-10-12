@@ -9,6 +9,7 @@ if [[ -z "$VERSION" ]]; then
   exit 1
 fi
 
+make clean
 make
 
 RELEASE_NAME="node-shim-${VERSION}-macos"
