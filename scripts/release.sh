@@ -21,6 +21,8 @@ cp main scripts/install.sh LICENSE.txt README.md "$RELEASE_PATH"
 mkdir "$RELEASE_PATH"/scripts
 cp scripts/run-shim-template.sh "$RELEASE_PATH"/scripts/
 
+git reset
+git commit --allow-empty -m $VERSION
 git tag -a $VERSION -m $VERSION
 
 cd _release
