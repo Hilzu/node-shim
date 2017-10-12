@@ -25,4 +25,5 @@ setup.log
 # End of https://www.gitignore.io/api/ocaml
 
 main
+test
 _release

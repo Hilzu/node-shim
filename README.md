@@ -27,6 +27,7 @@ Source code is available at [GitHub](https://github.com/Hilzu/node-shim). To bui
 - Make 3.81
 - OCamlbuild 0.11.0
 - OPAM 1.2.2
+    - ounit 2.0.5
     - yojson 1.4.0
 
 Other versions of the dependencies might work but the app has been developed with the ones above.

@@ -1,4 +1,4 @@
-all: main
+all: main test
 
 main: main.native
 
@@ -9,7 +9,7 @@ test: test.native
 	mv $@ $*
 
 clean:
-	rm -rf _build main
+	rm -rf _build main test
 
 install:
 	scripts/install.sh
