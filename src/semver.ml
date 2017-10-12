@@ -1,29 +1,43 @@
-type t = {major : int; minor : int; patch : int}
+type range = Minor | Patch | None
 
-let make major minor patch =
-  { major; minor; patch }
+type t = {major : int; minor : int; patch : int; range : range }
+
+let make range major minor patch =
+  { major; minor; patch; range }
+
+let string_of_range r = match r with
+  | Minor -> "^"
+  | Patch -> "~"
+  | None -> ""
+
+let range_of_string s = match s with
+  | "^" -> Minor
+  | "~" -> Patch
+  | "" -> None
+  | _ -> raise (invalid_arg s)
+
+let to_version_string s =
+  Printf.sprintf "%d.%d.%d" s.major s.minor s.patch
 
 let to_string s =
-  Printf.sprintf "%d.%d.%d" s.major s.minor s.patch
+  Printf.sprintf "%s%s" (string_of_range s.range) (to_version_string s)
 
 exception Invalid_semver of string
 
 let starts_with_char s c =
   String.length s > 0 && s.[0] = c
 
+let semver_regexp =
+  let range = "\\([~^]\\)?" in
+  let num = "\\([0-9]+\\)" in
+  let dot = "\\." in
+  Str.regexp (range ^ num ^ dot ^ num ^ dot ^ num)
+
 let of_string s =
-  let parts =
-    let str_parts = String.split_on_char '.' s in
-    let [major_str; minor_str; patch_str] =
-      if List.length str_parts <> 3 then raise (Invalid_semver s) else str_parts
-    in
-    let major_str' = if major_str.[0] = '~' || major_str.[0] = '^'
-      then String.sub major_str 1 (String.length major_str - 1)
-      else major_str
-    in
-    [major_str'; minor_str; patch_str]
-  in
-  let nums = List.map int_of_string parts in
-  match nums with
-  | [major; minor; patch] -> make major minor patch
-  | _ -> raise (Invalid_semver s)
+  if not (Str.string_match semver_regexp s 0) then raise (Invalid_semver s)
+  else
+    let r = try Str.matched_group 1 s with Not_found -> "" in
+    let major = int_of_string (Str.matched_group 2 s) in
+    let minor = int_of_string (Str.matched_group 3 s) in
+    let patch = int_of_string (Str.matched_group 4 s) in
+    make (range_of_string r) major minor patch
