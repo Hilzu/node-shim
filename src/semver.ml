@@ -42,9 +42,6 @@ let to_string s =
 
 exception Invalid_semver of string
 
-let starts_with_char s c =
-  String.length s > 0 && s.[0] = c
-
 let semver_regexp =
   let range = "\\([~^]\\)?" in
   let num = "\\([0-9]+\\)" in
