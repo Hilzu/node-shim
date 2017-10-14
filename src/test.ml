@@ -20,6 +20,7 @@ open OUnit2;;
 
 let tests = "Tests" >::: [
   Semver_test.suite;
+  Shim_test.suite;
 ]
 
 let _ =

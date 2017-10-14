@@ -55,3 +55,16 @@ let of_string s =
     let minor = int_of_string (Str.matched_group 3 s) in
     let patch = int_of_string (Str.matched_group 4 s) in
     make (range_of_string r) major minor patch
+
+let min_version t = t.version
+
+let exclusive_max_version t =
+  let v = t.version in
+  let open Version in
+  match t.range with
+  | Minor -> { v with major = v.major + 1 }
+  | Patch -> { v with minor = v.minor + 1 }
+  | None -> { v with patch = v.patch + 1 }
+
+let is_compatible t v =
+  v >= min_version t && v < exclusive_max_version t

@@ -23,3 +23,17 @@ let make major minor patch =
 
 let to_string t =
   Printf.sprintf "%d.%d.%d" t.major t.minor t.patch
+
+let version_regexp =
+  Str.regexp "\\([0-9]+\\)\\.\\([0-9]+\\)\\.\\([0-9]+\\)"
+
+exception Invalid_version of string
+let of_string s =
+  if not (Str.string_match version_regexp s 0) then raise (Invalid_version s)
+  else
+    let major = Str.matched_group 1 s in
+    let minor = Str.matched_group 2 s in
+    let patch = Str.matched_group 3 s in
+    try
+      make (int_of_string major) (int_of_string minor) (int_of_string patch)
+    with Failure _ -> raise (Invalid_version s)
