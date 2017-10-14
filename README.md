@@ -5,7 +5,7 @@ Shim node, npm and yarn binaries to use the correct version according to `engine
 This app is a work in progress so a lot of features that you would expect are missing. Some known issues are:
 
 - Has only been tested on macOS (might work on Linux)
-- Semver ranges aren't supported (range is discarded and the exact version specified is used)
+- Only tilde and caret semver ranges are supported
 - node, npm and yarn have to be downloaded manually and be put to the correct location like `~/.local/opt/node-shim/yarn/1.1.0`
 - Global node, npm and yarn binaries are only searched from `/usr/local/bin`
 
