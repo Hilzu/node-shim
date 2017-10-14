@@ -11,13 +11,17 @@ This app is a work in progress so a lot of features that you would expect are mi
 
 That said it works pretty well for me right now but might not work for you yet.
 
-To enable debug logging to `stderr` you can set `NODE_SHIM_DEBUG` environment variable to `"true"`.
-
 ## Installing
 
 You can download the latest release from [GitHub releases](https://github.com/Hilzu/node-shim/releases). Extract the file and run the `install.sh` script. By default it copies the necessary files to `~/bin`. You can also install the app by running `make && make install`.
 
 For the files to work you should have `~/bin` in your `$PATH` environment variable before paths that might have global node, npm or yarn binaries.
+
+## Options
+
+To enable debug logging to `stderr` you can set `NODE_SHIM_DEBUG` environment variable to `"true"`.
+
+By default the program versions are searched from `~/.local/opt/node-shim`. To override it you can use the `NODE_SHIM_ROOT` environment variable.
 
 ## Building
 

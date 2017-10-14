@@ -15,7 +15,10 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *)
-let shim_root = File.join [File.home_dir; ".local"; "opt"; "node-shim"]
+let shim_root =
+  try Sys.getenv "NODE_SHIM_ROOT"
+  with Not_found ->
+    File.join [File.home_dir; ".local"; "opt"; "node-shim"]
 
 exception Executable_not_found of string
 
@@ -32,6 +35,7 @@ let find_highest_compatible_version semver versions =
     List.hd (List.sort descending_compare versions)
 
 let find_executable program semver =
+  Logger.debug ("Shim root: " ^ shim_root);
   let versions_path = File.join [shim_root; Program.to_string program] in
   let all_version_strs =
     List.filter
