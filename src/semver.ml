@@ -18,10 +18,10 @@
 
 type range = Minor | Patch | None
 
-type t = {major : int; minor : int; patch : int; range : range }
+type t = {version : Version.t; range : range }
 
 let make range major minor patch =
-  { major; minor; patch; range }
+  { range; version = Version.make major minor patch }
 
 let string_of_range r = match r with
   | Minor -> "^"
@@ -34,11 +34,10 @@ let range_of_string s = match s with
   | "" -> None
   | _ -> raise (invalid_arg s)
 
-let to_version_string s =
-  Printf.sprintf "%d.%d.%d" s.major s.minor s.patch
+let to_version s = s.version
 
 let to_string s =
-  Printf.sprintf "%s%s" (string_of_range s.range) (to_version_string s)
+  Printf.sprintf "%s%s" (string_of_range s.range) (Version.to_string s.version)
 
 exception Invalid_semver of string
 

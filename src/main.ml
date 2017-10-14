@@ -52,8 +52,8 @@ let get_exec program =
     Logger.debug ("Found engines: " ^ Package.string_of_engines engines);
     match get_version engines program with
     | None -> global_exec
-    | Some version ->
-      let version_str = Semver.to_version_string version in
+    | Some semver ->
+      let version_str = Version.to_string (Semver.to_version semver) in
       Shim.find_executable program version_str
 
 let _ =
