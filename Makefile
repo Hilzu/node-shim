@@ -9,9 +9,9 @@ test: test.native
 	mv $@ $*
 
 clean:
-	rm -rf _build main test
+	rm -rf _build _release main test
 
 install:
 	scripts/install.sh
 
-.PHONY: test default clean install
+.PHONY: default clean install all
