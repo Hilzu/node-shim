@@ -38,29 +38,45 @@ let get_version engines program =
   | Npm -> engines.npm
   | Yarn -> engines.yarn
 
-let get_exec program =
-  let global_exec = "/usr/local/bin/" ^ Program.to_string program in
-  let path_opt =
-    try Some (Package.find_package_json ()) with Not_found -> None
-  in
-  match path_opt with
-  | None -> global_exec
-  | Some path ->
+let program_version_env_var program =
+  Printf.sprintf
+    "NODE_SHIM_%s_VERSION"
+    (String.uppercase_ascii (Program.to_string program))
+
+let get_version_from_package_json program =
+  match Package.find_package_json_res () with
+  | Error _ -> None
+  | Ok path ->
     Logger.debug ("Found package.json: " ^ path);
     let ch = open_in path in
     let engines = Package.parse_engines_from_chan ch in
     Logger.debug ("Found engines: " ^ Package.string_of_engines engines);
     match get_version engines program with
-    | None -> global_exec
-    | Some semver ->
-      Shim.find_executable program semver
+    | None -> None
+    | Some semver -> Some (Shim.find_highest_available_version program semver)
+
+let get_executable_path program =
+  let global_exec = "/usr/local/bin/" ^ Program.to_string program in
+  let version_opt =
+    match Sys.getenv_opt (program_version_env_var program) with
+    | Some v ->
+      Logger.debug ("Found version from env: " ^ v);
+      Some (Version.of_string v)
+    | None ->
+      get_version_from_package_json program
+  in
+  match version_opt with
+  | Some v ->
+    Unix.putenv (program_version_env_var program) (Version.to_string v);
+    Shim.exec_path_from_version program v
+  | None -> global_exec
 
 let _ =
   try
     let (program, program_args) = parse_args () in
     Logger.debug ("Finding executable for: " ^ Program.to_string program);
     Logger.debug ("Arguments to pass to program: " ^ String.concat ", " program_args);
-    let exec = get_exec program in
+    let exec = get_executable_path program in
     Logger.debug ("Found executable: " ^ exec);
     flush_all (); (* Ensure that all output is written before moving control to exec *)
     Unix.execv exec (Array.of_list (exec :: program_args))

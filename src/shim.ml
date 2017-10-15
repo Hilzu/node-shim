@@ -34,17 +34,23 @@ let find_highest_compatible_version semver versions =
     let descending_compare x y = ~- (compare x y) in
     List.hd (List.sort descending_compare versions)
 
-let find_executable program semver =
-  Logger.debug ("Shim root: " ^ shim_root);
-  let versions_path = File.join [shim_root; Program.to_string program] in
+let versions_path program =
+  File.join [shim_root; Program.to_string program]
+
+let exec_path_from_version program version =
+  let exec_path =
+    File.join
+      [versions_path program; Version.to_string version; Program.bin_path program]
+  in
+  if not (Sys.file_exists exec_path) then raise (Executable_not_found exec_path)
+  else exec_path
+
+let find_highest_available_version program semver =
   let all_version_strs =
     List.filter
       (fun s -> Str.string_match Version.version_regexp s 0)
-      (Array.to_list (Sys.readdir versions_path))
+      (Array.to_list (Sys.readdir (versions_path program)))
   in
   let all_versions = List.map Version.of_string all_version_strs in
-  Logger.debug ("Found versions: " ^ String.concat ", " all_version_strs);
-  let version = find_highest_compatible_version semver all_versions in
-  let exec_path = File.join [versions_path; Version.to_string version; Program.bin_path program] in
-  if not (Sys.file_exists exec_path) then raise (Executable_not_found exec_path)
-  else exec_path
+  Logger.debug ("Found available versions: " ^ String.concat ", " all_version_strs);
+  find_highest_compatible_version semver all_versions

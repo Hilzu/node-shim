@@ -33,6 +33,9 @@ let string_of_engines e =
 let find_package_json () =
   File.find_file_by_traversing_up (Sys.getcwd ()) "package.json"
 
+let find_package_json_res () =
+  try Ok (find_package_json ()) with e -> Error e
+
 let parse_engines_from_chan ch =
   let json = J.from_channel ch in
   let open J.Util in
