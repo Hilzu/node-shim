@@ -18,7 +18,8 @@
 
 module J = Yojson.Basic
 
-type engines = {node : Semver.t option; npm : Semver.t option; yarn : Semver.t option}
+type engines =
+  {node : Semver.t option; npm : Semver.t option; yarn : Semver.t option}
 
 let make_engines node npm yarn =
   { node; npm; yarn }

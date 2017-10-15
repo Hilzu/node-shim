@@ -18,14 +18,11 @@
 
 type t = { major : int; minor : int; patch : int; }
 
-let make major minor patch =
-  { major; minor; patch }
+let make major minor patch = { major; minor; patch }
 
-let to_string t =
-  Printf.sprintf "%d.%d.%d" t.major t.minor t.patch
+let to_string t = Printf.sprintf "%d.%d.%d" t.major t.minor t.patch
 
-let version_regexp =
-  Str.regexp "\\([0-9]+\\)\\.\\([0-9]+\\)\\.\\([0-9]+\\)"
+let version_regexp = Str.regexp "\\([0-9]+\\)\\.\\([0-9]+\\)\\.\\([0-9]+\\)"
 
 exception Invalid_version of string
 let of_string s =
@@ -36,4 +33,5 @@ let of_string s =
     let patch = Str.matched_group 3 s in
     try
       make (int_of_string major) (int_of_string minor) (int_of_string patch)
-    with Failure _ -> raise (Invalid_version s)
+    with
+    | Failure _ -> raise (Invalid_version s)

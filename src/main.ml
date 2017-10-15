@@ -18,9 +18,7 @@
 
 let parse_args () =
   let program_args = ref [] in
-  let append_to_args a =
-    program_args := a :: !program_args
-  in
+  let append_to_args a = program_args := a :: !program_args in
   let arg_spec = [
     ("--", Arg.Rest append_to_args, "Arguments passed to program");
   ] in
@@ -39,36 +37,35 @@ let get_version engines program =
   | Yarn -> engines.yarn
 
 let program_version_env_var program =
-  Printf.sprintf
-    "NODE_SHIM_%s_VERSION"
-    (String.uppercase_ascii (Program.to_string program))
+  let s = String.uppercase_ascii (Program.to_string program) in
+  Printf.sprintf "NODE_SHIM_%s_VERSION" s
 
 let get_version_from_package_json program =
   match Package.find_package_json_res () with
   | Error _ -> None
   | Ok path ->
-    Logger.debug ("Found package.json: " ^ path);
-    let ch = open_in path in
-    let engines = Package.parse_engines_from_chan ch in
-    Logger.debug ("Found engines: " ^ Package.string_of_engines engines);
-    match get_version engines program with
-    | None -> None
-    | Some semver -> Some (Shim.find_highest_available_version program semver)
+      Logger.debug ("Found package.json: " ^ path);
+      let ch = open_in path in
+      let engines = Package.parse_engines_from_chan ch in
+      Logger.debug ("Found engines: " ^ Package.string_of_engines engines);
+      match get_version engines program with
+      | None -> None
+      | Some semver -> Some (Shim.find_highest_available_version program semver)
 
 let get_executable_path program =
   let global_exec = "/usr/local/bin/" ^ Program.to_string program in
   let version_opt =
     match Sys.getenv_opt (program_version_env_var program) with
     | Some v ->
-      Logger.debug ("Found version from env: " ^ v);
-      Some (Version.of_string v)
+        Logger.debug ("Found version from env: " ^ v);
+        Some (Version.of_string v)
     | None ->
-      get_version_from_package_json program
+        get_version_from_package_json program
   in
   match version_opt with
   | Some v ->
-    Unix.putenv (program_version_env_var program) (Version.to_string v);
-    Shim.exec_path_from_version program v
+      Unix.putenv (program_version_env_var program) (Version.to_string v);
+      Shim.exec_path_from_version program v
   | None -> global_exec
 
 let _ =

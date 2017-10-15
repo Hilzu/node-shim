@@ -48,13 +48,12 @@ let semver_regexp =
   Str.regexp (range ^ num ^ dot ^ num ^ dot ^ num)
 
 let of_string s =
-  if not (Str.string_match semver_regexp s 0) then raise (Invalid_semver s)
-  else
-    let r = try Str.matched_group 1 s with Not_found -> "" in
-    let major = int_of_string (Str.matched_group 2 s) in
-    let minor = int_of_string (Str.matched_group 3 s) in
-    let patch = int_of_string (Str.matched_group 4 s) in
-    make (range_of_string r) major minor patch
+  if not (Str.string_match semver_regexp s 0) then raise (Invalid_semver s) else
+  let r = try Str.matched_group 1 s with Not_found -> "" in
+  let major = int_of_string (Str.matched_group 2 s) in
+  let minor = int_of_string (Str.matched_group 3 s) in
+  let patch = int_of_string (Str.matched_group 4 s) in
+  make (range_of_string r) major minor patch
 
 let min_version t = t.version
 
@@ -66,5 +65,4 @@ let exclusive_max_version t =
   | Patch -> { v with minor = v.minor + 1 }
   | None -> { v with patch = v.patch + 1 }
 
-let is_compatible t v =
-  v >= min_version t && v < exclusive_max_version t
+let is_compatible t v = v >= min_version t && v < exclusive_max_version t

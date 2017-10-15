@@ -16,9 +16,9 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *)
 let shim_root =
-  try Sys.getenv "NODE_SHIM_ROOT"
-  with Not_found ->
-    File.join [File.home_dir; ".local"; "opt"; "node-shim"]
+  try Sys.getenv "NODE_SHIM_ROOT" with
+  | Not_found ->
+      File.join [File.home_dir; ".local"; "opt"; "node-shim"]
 
 exception Executable_not_found of string
 
@@ -31,11 +31,10 @@ let find_highest_compatible_version semver versions =
   | [] -> raise No_compatible_version
   | [v] -> v
   | versions ->
-    let descending_compare x y = ~- (compare x y) in
-    List.hd (List.sort descending_compare versions)
+      let descending_compare x y = ~- (compare x y) in
+      List.hd (List.sort descending_compare versions)
 
-let versions_path program =
-  File.join [shim_root; Program.to_string program]
+let versions_path program = File.join [shim_root; Program.to_string program]
 
 let exec_path_from_version program version =
   let exec_path =
@@ -46,11 +45,9 @@ let exec_path_from_version program version =
   else exec_path
 
 let find_highest_available_version program semver =
-  let all_version_strs =
-    List.filter
-      (fun s -> Str.string_match Version.version_regexp s 0)
-      (Array.to_list (Sys.readdir (versions_path program)))
-  in
+  let files = Array.to_list (Sys.readdir (versions_path program)) in
+  let matches_version_pattern s = Str.string_match Version.version_regexp s 0 in
+  let all_version_strs = List.filter matches_version_pattern files in
   let all_versions = List.map Version.of_string all_version_strs in
   Logger.debug ("Found available versions: " ^ String.concat ", " all_version_strs);
   find_highest_compatible_version semver all_versions
