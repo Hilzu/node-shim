@@ -2,9 +2,10 @@
 
 set -euo pipefail
 
-INSTALL_PATH=~/bin
-
+INSTALL_PATH=${INSTALL_PATH:-~/bin}
+mkdir -p "$INSTALL_PATH"
 cp main "${INSTALL_PATH}/node-shim"
+
 for PROGRAM in node npm yarn
 do
   TARGET="${INSTALL_PATH}/$PROGRAM"
