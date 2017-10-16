@@ -47,7 +47,7 @@ let suite = "Shim" >:::
 
   "Highest compatible version raises exception when no version found" >:: (
     fun _ ->
-      assert_raises No_compatible_version (fun () ->
+      assert_raises No_compatible_version_found (fun () ->
         find_version (S.make S.Minor 2 0 0) ["1.0.0"; "1.6.3"; "0.1.4"; "22.52.22"; "1.4.65"]
       )
   );

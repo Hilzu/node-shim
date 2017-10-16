@@ -22,13 +22,13 @@ let shim_root =
 
 exception Executable_not_found of string
 
-exception No_compatible_version
+exception No_compatible_version_found
 
 let find_highest_compatible_version semver versions =
   let is_compatible = Semver.is_compatible semver in
   let compatible_versions = List.filter is_compatible versions in
   match compatible_versions with
-  | [] -> raise No_compatible_version
+  | [] -> raise No_compatible_version_found
   | [v] -> v
   | versions ->
       let descending_compare x y = ~- (compare x y) in
