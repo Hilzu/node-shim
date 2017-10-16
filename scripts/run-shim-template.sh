@@ -2,4 +2,4 @@
 
 set -euo pipefail
 
-node-shim $PROGRAM_PLACEHOLDER -- "$@"
+exec node-shim $PROGRAM_PLACEHOLDER -- "$@"
