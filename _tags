@@ -1,2 +1,2 @@
 <src/**>: include
-true: safe_string, package(ounit, str, unix, yojson)
+true: safe_string, package(oUnit, str, unix, yojson)
