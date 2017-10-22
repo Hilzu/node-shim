@@ -1,0 +1,24 @@
+opam-version: "1.2"
+name: "node-shim"
+version: "0.0.3"
+maintainer: "Santeri Hiltunen <accounts.github@me.hilzu.moe>"
+authors: "Santeri Hiltunen <accounts.github@me.hilzu.moe>"
+homepage: "https://github.com/Hilzu/node-shim"
+bug-reports: "https://github.com/Hilzu/node-shim/issues"
+license: "GPL-3.0+"
+dev-repo: "https://github.com/Hilzu/node-shim.git"
+build: [
+  [make "main"]
+]
+build-test: [
+  [make "test"]
+]
+install: [make "install"]
+remove: ["ocamlfind" "remove" "node-shim"]
+available: [ os = "darwin" & ocaml-version = "4.05.0" ]
+depends: [
+  "yojson"
+  "ounit"
+  "ocamlbuild" {build}
+  "ocamlfind" {build}
+]
