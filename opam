@@ -18,7 +18,7 @@ remove: ["ocamlfind" "remove" "node-shim"]
 available: [ os = "darwin" & ocaml-version = "4.05.0" ]
 depends: [
   "yojson"
-  "ounit"
+  "ounit" {test}
   "ocamlbuild" {build}
   "ocamlfind" {build}
 ]
