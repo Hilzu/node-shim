@@ -18,6 +18,8 @@ echo "Building release for version $VERSION and platform $PLATFORM"
 make clean
 make
 
+./test
+
 RELEASE_NAME="node-shim-${VERSION}-${PLATFORM}"
 RELEASE_PATH="_release/$RELEASE_NAME"
 rm -rf _release
