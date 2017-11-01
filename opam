@@ -15,7 +15,7 @@ build-test: [
 ]
 install: [make "install"]
 remove: ["ocamlfind" "remove" "node-shim"]
-available: [ os = "darwin" & ocaml-version = "4.05.0" ]
+available: [ (os = "darwin" | os = "linux") & ocaml-version = "4.05.0" ]
 depends: [
   "yojson"
   "ounit" {test}
