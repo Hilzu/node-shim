@@ -7,7 +7,7 @@ This app is a work in progress so a lot of features that you would expect are mi
 - No Windows support ([#4](https://github.com/Hilzu/node-shim/issues/4))
 - Only tilde and caret semver ranges are supported ([#7](https://github.com/Hilzu/node-shim/issues/7))
 - node, npm and yarn have to be downloaded manually and be put to the correct location like `~/.local/opt/node-shim/yarn/1.1.0` ([#3](https://github.com/Hilzu/node-shim/issues/3))
-- Global node, npm and yarn binaries are only searched from `/usr/local/bin` ([#2](https://github.com/Hilzu/node-shim/issues/)]
+- Global node, npm and yarn binaries are only searched from `/usr/local/bin` ([#2](https://github.com/Hilzu/node-shim/issues/2))
 
 That said I've been able to completely replace `nvm` on my machine with node-shim. I hope you'll try it and tell me how it went!
 
