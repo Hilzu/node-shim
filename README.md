@@ -4,12 +4,12 @@ Shim node, npm and yarn binaries to use the correct version according to `engine
 
 This app is a work in progress so a lot of features that you would expect are missing. Some known issues are:
 
-- Has only been tested on macOS (might work on Linux)
-- Only tilde and caret semver ranges are supported
-- node, npm and yarn have to be downloaded manually and be put to the correct location like `~/.local/opt/node-shim/yarn/1.1.0`
-- Global node, npm and yarn binaries are only searched from `/usr/local/bin`
+- No Windows support (#4)
+- Only tilde and caret semver ranges are supported (#7)
+- node, npm and yarn have to be downloaded manually and be put to the correct location like `~/.local/opt/node-shim/yarn/1.1.0` (#3)
+- Global node, npm and yarn binaries are only searched from `/usr/local/bin` (#2)
 
-That said it works pretty well for me right now but might not work for you yet.
+That said I've been able to completely replace `nvm` on my machine with node-shim. I hope you'll try it and tell me how it went!
 
 ## Installing
 
@@ -37,5 +37,3 @@ Source code is available at [GitHub](https://github.com/Hilzu/node-shim). To bui
 Other versions of the dependencies might work but the app has been developed with the ones above.
 
 With all of the above installed you can build the app by running `make` in the app root directory. An executable called `main` should be created in the root.
-
-Building might be possible on Linux but it has only been tested on macOS for now.
