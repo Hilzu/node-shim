@@ -27,6 +27,7 @@ exception No_compatible_version_found
 let find_highest_compatible_version semver versions =
   let is_compatible = Semver.is_compatible semver in
   let compatible_versions = List.filter is_compatible versions in
+  Logger.debug ("Found compatible versions: " ^ String.concat ", " (List.map Version.to_string compatible_versions));
   match compatible_versions with
   | [] -> raise No_compatible_version_found
   | [v] -> v

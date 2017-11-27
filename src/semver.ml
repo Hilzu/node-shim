@@ -61,8 +61,8 @@ let exclusive_max_version t =
   let v = t.version in
   let open Version in
   match t.range with
-  | Minor -> { v with major = v.major + 1 }
-  | Patch -> { v with minor = v.minor + 1 }
+  | Minor -> { major = v.major + 1; minor = 0; patch = 0 }
+  | Patch -> { v with minor = v.minor + 1; patch = 0 }
   | None -> { v with patch = v.patch + 1 }
 
 let is_compatible t v = v >= min_version t && v < exclusive_max_version t

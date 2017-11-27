@@ -44,17 +44,34 @@ let suite = "Semver" >:::
   );
 
   "exclusive max version with minor range" >:: (fun _ ->
-    let s = Semver.exclusive_max_version (make Minor 1 0 0) in
+    let s = exclusive_max_version (make Minor 1 0 0) in
     assert_version (Version.make 2 0 0) s
   );
 
   "exclusive max version with patch range" >:: (fun _ ->
-    let s = Semver.exclusive_max_version (make Patch 1 0 0) in
+    let s = exclusive_max_version (make Patch 1 0 0) in
     assert_version (Version.make 1 1 0) s
   );
 
-  "exclusive max version with none range" >:: (fun _ ->
-    let s = Semver.exclusive_max_version (make None 1 0 0) in
-    assert_version (Version.make 1 0 1) s
+  "exclusive max version with minor range 2" >:: (fun _ ->
+    let s = exclusive_max_version (make Minor 8 9 1) in
+    assert_version (Version.make 9 0 0) s
+  );
+
+  "exclusive max version with minor range 3" >:: (fun _ ->
+    let s = exclusive_max_version (make Minor 9 1 0) in
+    assert_version (Version.make 10 0 0) s
+  );
+
+  "is_compatible" >:: (fun _ ->
+    let s = make Minor 8 9 3 in
+    let v = Version.make 8 10 0 in
+    assert_bool "is_compatible returned false" (is_compatible s v)
+  );
+
+  "is_compatible" >:: (fun _ ->
+    let s = make Patch 8 9 3 in
+    let v = Version.make 8 10 0 in
+    assert_bool "is_compatible returned true" (not (is_compatible s v))
   );
 ]

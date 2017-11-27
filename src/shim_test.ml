@@ -45,6 +45,12 @@ let suite = "Shim" >:::
       assert_version (V.make 1 6 3) v
   );
 
+  "Highest compatible version with Minor semver range and bunch of versions" >:: (
+    fun _ ->
+      let v = find_version (S.make S.Minor 8 9 1) ["9.1.0"; "8.9.1"] in
+      assert_version (V.make 8 9 1) v
+  );
+
   "Highest compatible version raises exception when no version found" >:: (
     fun _ ->
       assert_raises No_compatible_version_found (fun () ->
