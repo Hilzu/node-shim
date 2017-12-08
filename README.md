@@ -1,5 +1,7 @@
 # node-shim
 
+[![Build Status](https://travis-ci.org/Hilzu/node-shim.svg?branch=master)](https://travis-ci.org/Hilzu/node-shim)
+
 Shim node, npm and yarn binaries to use the correct version according to `engines` field in `package.json`. The file is found by traversing the current directory hierarchy up and the first one found is used. If no `package.json` is found or it doesn't have a version for the program the shims default to the global node, npm or yarn.
 
 This app is a work in progress so a lot of features that you would expect are missing. Some known issues are:
