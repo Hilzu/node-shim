@@ -3,6 +3,7 @@ all: main test
 main: main.native
 
 test: test.native
+	./test
 
 %.native:
 	ocamlbuild -use-ocamlfind $@
