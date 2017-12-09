@@ -1,6 +1,6 @@
 opam-version: "1.2"
 name: "node-shim"
-version: "0.0.4"
+version: "0.0.5"
 maintainer: "Santeri Hiltunen <accounts.github@me.hilzu.moe>"
 authors: "Santeri Hiltunen <accounts.github@me.hilzu.moe>"
 homepage: "https://github.com/Hilzu/node-shim"
