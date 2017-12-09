@@ -15,7 +15,7 @@ That said I've been able to completely replace `nvm` on my machine with node-shi
 
 ## Installing
 
-You can download the latest release from [GitHub releases](https://github.com/Hilzu/node-shim/releases). Extract the file and run the `install.sh` script. By default it copies the necessary files to `~/bin`. You can also install the app by running `make && make install`.
+You can download the latest release from [GitHub releases](https://github.com/Hilzu/node-shim/releases). Extract the file and run the `install.sh` script. By default it copies the necessary files to `~/bin`.
 
 For the files to work you should have `~/bin` in your `$PATH` environment variable before paths that might have global node, npm or yarn binaries.
 
