@@ -5,10 +5,20 @@ set -euo pipefail
 VERSION=$(sed -n 's/^version: "\([0-9.]*\)"/\1/p' opam)
 
 case "$OSTYPE" in
-  darwin*) PLATFORM="macos" ;;
-  linux*) PLATFORM="linux" ;;
+  darwin*) PLATFORM="macos64" ;;
+  linux*)
+    ARCHITECTURE="$(uname -m)"
+    case "$ARCHITECTURE" in
+      x86_64) PLATFORM="linux64" ;;
+      i?86) PLATFORM="linux32" ;;
+      *)
+        echo "Unsupported architecture $ARCHITECTURE"
+        exit 1
+        ;;
+    esac
+    ;;
   *)
-    echo "Unknown platform $OSTYPE"
+    echo "Unsupported platform $OSTYPE"
     exit 1
     ;;
 esac
