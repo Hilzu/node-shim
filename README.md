@@ -27,15 +27,27 @@ By default the program versions are searched from `~/.local/opt/node-shim`. To o
 
 ## Building
 
-Source code is available at [GitHub](https://github.com/Hilzu/node-shim). To build it you need:
+Source code is available at [GitHub](https://github.com/Hilzu/node-shim).
 
-- OCaml 4.05.0
-- Make 3.81
-- OCamlbuild 0.11.0
-- OPAM 1.2.2
-    - ounit 2.0.5
-    - yojson 1.4.0
+```bash
+# Install and init opam
+# You can install opam with Homebrew on macOS
+brew install opam
+opam init
 
-Other versions of the dependencies might work but the app has been developed with the ones above.
+# Create a new opam switch with the correct compiler
+opam switch node-shim --alias-of 4.06.0
+eval `opam config env`
 
-With all of the above installed you can build the app by running `make` in the app root directory. An executable called `main` should be created in the root.
+# Pin package
+opam pin add node-shim . -n -y
+
+# Install dependecies
+opam install node-shim -t
+
+# Compile everything and run tests
+make
+
+# Run executable
+./main
+```
