@@ -19,11 +19,25 @@ You can download the latest release from [GitHub releases](https://github.com/Hi
 
 For the files to work you should have `~/bin` in your `$PATH` environment variable before paths that might have global node, npm or yarn binaries.
 
-## Options
+## Environment variables
 
-To enable debug logging to `stderr` you can set `NODE_SHIM_DEBUG` environment variable to `"true"`.
+node-shim can be controlled with several environment variables.
 
-By default the program versions are searched from `~/.local/opt/node-shim`. To override it you can use the `NODE_SHIM_ROOT` environment variable.
+### `NODE_SHIM_DEBUG`
+
+To enable debug logging to `stderr` set this variable to `"true"`.
+
+### `NODE_SHIM_ROOT`
+
+Path where to look program versions from. Defaults to `~/.local/opt/node-shim`.
+
+### `NODE_SHIM_$PROGRAM_VERSION`
+
+Force `$PROGRAM` to resolve to certain version. For example to always use version `1.3.2` of yarn set this environment variable:
+
+```bash
+export NODE_SHIM_YARN_VERSION=1.3.2
+```
 
 ## Building
 
