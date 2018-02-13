@@ -2,7 +2,7 @@
 
 (executable (
   (name test)
-  (libraries (node-shim ounit))))
+  (libraries (node-shim oUnit))))
 
 (alias (
   (name runtest)
