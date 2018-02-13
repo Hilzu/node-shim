@@ -1,5 +1,0 @@
-PRJ node-shim
-S src
-PKG oUnit
-PKG yojson
-B _build/src

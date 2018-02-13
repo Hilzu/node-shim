@@ -17,6 +17,7 @@
 *)
 
 open OUnit2
+open Node_shim
 open Shim
 module S = Semver
 module V = Version

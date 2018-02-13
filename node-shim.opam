@@ -7,18 +7,11 @@ homepage: "https://github.com/Hilzu/node-shim"
 bug-reports: "https://github.com/Hilzu/node-shim/issues"
 license: "GPL-3.0+"
 dev-repo: "https://github.com/Hilzu/node-shim.git"
-build: [
-  [make "main"]
-]
-build-test: [
-  [make "test"]
-]
-install: [make "install"]
-remove: ["ocamlfind" "remove" "node-shim"]
+build: [["jbuilder" "build" "-p" name "-j" jobs]]
+build-test: [["jbuilder" "runtest" "-p" name "-j" jobs]]
 available: [ (os = "darwin" | os = "linux") & ocaml-version = "4.06.0" ]
 depends: [
   "yojson"
   "ounit" {test}
-  "ocamlbuild" {build}
-  "ocamlfind" {build}
+  "jbuilder" {build}
 ]

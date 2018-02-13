@@ -1,3 +1,0 @@
-<src/**>: include
-<src/*test.*>: package(oUnit)
-true: package(str, unix, yojson)

@@ -17,6 +17,7 @@
 *)
 
 open OUnit2
+open Node_shim
 open Semver
 
 let assert_semver = assert_equal ~printer:to_string
