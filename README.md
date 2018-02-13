@@ -63,5 +63,5 @@ opam install node-shim -t
 make
 
 # Run executable
-./main
+./_build/install/default/bin/node-shim
 ```
