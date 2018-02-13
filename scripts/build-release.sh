@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-VERSION=$(sed -n 's/^version: "\([0-9.]*\)"/\1/p' opam)
+VERSION=$(sed -n 's/^version: "\([0-9.]*\)"/\1/p' node-shim.opam)
 
 case "$OSTYPE" in
   darwin*) PLATFORM="macos64" ;;
@@ -32,7 +32,7 @@ RELEASE_NAME="node-shim-${VERSION}-${PLATFORM}"
 RELEASE_PATH="_release/$RELEASE_NAME"
 rm -rf _release
 mkdir -p "$RELEASE_PATH"
-cp main scripts/install.sh LICENSE.txt README.md "$RELEASE_PATH"
+cp _build/install/default/bin/node-shim scripts/install.sh LICENSE.txt README.md "$RELEASE_PATH"
 
 mkdir "$RELEASE_PATH"/scripts
 cp scripts/run-shim-template.sh "$RELEASE_PATH"/scripts/

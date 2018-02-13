@@ -1,18 +1,15 @@
-all: main test
+all: build test
 
-main: main.native
+build:
+	jbuilder build @install
 
-test: test.native
-	./test
-
-%.native:
-	ocamlbuild -use-ocamlfind $@
-	mv $@ $*
+test:
+	jbuilder runtest
 
 clean:
-	rm -rf _build _release main test
+	rm -rf _build _release
 
-install:
+install: build
 	scripts/install.sh
 
-.PHONY: default clean install all
+.PHONY: default clean install all test build
