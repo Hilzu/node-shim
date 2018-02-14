@@ -1,6 +1,6 @@
 (jbuild_version 1)
 
 (executables (
-  (names (main))
-  (public_names (node-shim))
+  (names (main run))
+  (public_names (node-shim node-shim-run))
   (libraries (node-shim))))
