@@ -28,7 +28,10 @@ let parse_args () =
   let set_program s = program := s in
   let usage = "Usage: node-shim program" in
   Arg.parse arg_spec set_program usage;
-  (Program.of_string !program, List.rev !program_args)
+  if !program = "" then begin
+    Arg.usage arg_spec usage;
+    exit 1
+  end else (Program.of_string !program, List.rev !program_args)
 
 let get_version engines program =
   let open Package in
