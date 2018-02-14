@@ -6,7 +6,12 @@ cd "${0%/*}/.."
 
 INSTALL_PATH=${INSTALL_PATH:-~/bin}
 mkdir -p "$INSTALL_PATH"
-cp '_build/install/default/bin/node-shim' "${INSTALL_PATH}/node-shim"
+
+if [ -f "bin/node-shim" ]; then
+  cp bin/* "${INSTALL_PATH}/node-shim"
+else
+  cp _build/install/default/bin/* "${INSTALL_PATH}/node-shim"
+fi
 
 for PROGRAM in node npm yarn
 do

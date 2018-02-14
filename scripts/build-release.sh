@@ -34,10 +34,16 @@ RELEASE_NAME="node-shim-${VERSION}-${PLATFORM}"
 RELEASE_PATH="_release/$RELEASE_NAME"
 rm -rf _release
 mkdir -p "$RELEASE_PATH"
-cp _build/install/default/bin/node-shim scripts/install.sh LICENSE.txt README.md "$RELEASE_PATH"
+cp LICENSE.txt README.md "$RELEASE_PATH"
 
 mkdir "$RELEASE_PATH"/scripts
-cp scripts/run-shim-template.sh "$RELEASE_PATH"/scripts/
+cp scripts/run-shim-template.sh scripts/install.sh "$RELEASE_PATH"/scripts/
+
+mkdir "$RELEASE_PATH/bin"
+cp _build/install/default/bin/* "$RELEASE_PATH/bin"
+
+mkdir "$RELEASE_PATH/src"
+cp -R bin lib test Makefile node-shim.opam "$RELEASE_PATH/src"
 
 cd _release
 tar cvzf $RELEASE_NAME.tgz $RELEASE_NAME
