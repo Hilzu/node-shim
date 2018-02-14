@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+cd "${0%/*}/.."
+
 VERSION=$(sed -n 's/^version: "\([0-9.]*\)"/\1/p' node-shim.opam)
 
 case "$OSTYPE" in
