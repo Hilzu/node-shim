@@ -26,7 +26,7 @@ let parse_args () =
   ] in
   let program = ref "" in
   let set_program s = program := s in
-  let usage = "Usage: node-shim program" in
+  let usage = "Usage: node-shim-run <program> -- [<program_args>]" in
   Arg.parse arg_spec set_program usage;
   if !program = "" then begin
     Arg.usage arg_spec usage;

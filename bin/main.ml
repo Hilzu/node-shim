@@ -20,7 +20,7 @@ let commands = [
   "run";
 ]
 
-let usage = {|node-shim <command> [<args>]
+let usage = {|Usage: node-shim <command> [<args>]
 Valid commands: |} ^ String.concat " " commands
 
 let help_doc = "Display this list of options"
