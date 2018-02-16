@@ -23,9 +23,17 @@ let commands = [
 let usage = {|node-shim <command> [<args>]
 Valid commands: |} ^ String.concat " " commands
 
+let help_doc = "Display this list of options"
+
 let () =
-  let spec = [] in
   let command = ref "" in
+  let rec help_spec () =
+    if !command = ""
+    then raise (Arg.Help (Arg.usage_string (make_spec ()) usage))
+  and make_spec () = [
+    "-help", Arg.Unit help_spec, help_doc;
+    "--help", Arg.Unit help_spec, help_doc;
+  ] in
   let parse_anon command_str =
     if !command = ""
     then
@@ -33,10 +41,10 @@ let () =
       then command := command_str
       else raise (Arg.Bad ("Unknown command: " ^ command_str))
   in
-  let () = Arg.parse spec parse_anon usage in
+  let () = Arg.parse (make_spec ()) parse_anon usage in
   if !command = ""
   then begin
-    Arg.usage spec usage;
+    Arg.usage (make_spec ()) usage;
     exit 1
   end else
     let base_path = Filename.dirname Sys.executable_name in
