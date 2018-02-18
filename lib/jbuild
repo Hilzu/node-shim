@@ -3,4 +3,4 @@
 (library (
   (name node_shim)
   (public_name node-shim)
-  (libraries (str unix yojson))))
+  (libraries (lwt.unix str unix yojson))))

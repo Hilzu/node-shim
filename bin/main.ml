@@ -18,6 +18,7 @@
 
 let commands = [
   "run";
+  "install";
 ]
 
 let usage = {|Usage: node-shim <command> [<args>]
