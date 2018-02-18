@@ -8,15 +8,15 @@ INSTALL_PATH=${INSTALL_PATH:-~/bin}
 mkdir -p "$INSTALL_PATH"
 
 if [ -f "bin/node-shim" ]; then
-  cp bin/* "${INSTALL_PATH}/node-shim"
+  cp -R "bin/" "${INSTALL_PATH}"
 else
-  cp _build/install/default/bin/* "${INSTALL_PATH}/node-shim"
+  cp -RL "_build/install/default/bin/" "${INSTALL_PATH}"
 fi
 
 for PROGRAM in node npm yarn
 do
   TARGET="${INSTALL_PATH}/$PROGRAM"
-  cp scripts/run-shim-template.sh "$TARGET"
+  cp -f scripts/run-shim-template.sh "$TARGET"
   sed -i.bak "s/\\\$PROGRAM_PLACEHOLDER/$PROGRAM/" "$TARGET"
   rm "$TARGET.bak"
 done
