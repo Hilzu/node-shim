@@ -1,6 +1,6 @@
 (*
   node-shim - Utility to manage and use versions of node, npm and yarn
-  Copyright (C) 2017-Present  Santeri Hiltunen
+  Copyright (C) 2018-Present  Santeri Hiltunen
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
