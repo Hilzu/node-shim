@@ -25,6 +25,7 @@ let to_string t = Printf.sprintf "%d.%d.%d" t.major t.minor t.patch
 let version_regexp = Str.regexp "\\([0-9]+\\)\\.\\([0-9]+\\)\\.\\([0-9]+\\)"
 
 exception Invalid_version of string
+
 let of_string s =
   if not (Str.string_match version_regexp s 0) then raise (Invalid_version s)
   else
