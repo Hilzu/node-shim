@@ -3,10 +3,7 @@
 [![Build Status](https://travis-ci.org/Hilzu/node-shim.svg?branch=master)](https://travis-ci.org/Hilzu/node-shim)
 
 Shim node, npm and yarn binaries to use the correct version according to
-`engines` field in `package.json`. The file is found by traversing the current
-directory hierarchy up and the first one found is used. If no `package.json` is
-found or it doesn't have a version for the program the shims default to the
-global node, npm or yarn.
+`engines` field in `package.json`.
 
 This app is a work in progress so a lot of features that you would expect are
 missing. Some known issues are:
@@ -14,9 +11,6 @@ missing. Some known issues are:
 * No Windows support ([#4](https://github.com/Hilzu/node-shim/issues/4))
 * Only tilde and caret semver ranges are supported
   ([#7](https://github.com/Hilzu/node-shim/issues/7))
-* node, npm and yarn have to be downloaded manually and be put to the correct
-  location like `~/.local/opt/node-shim/yarn/1.1.0`
-  ([#3](https://github.com/Hilzu/node-shim/issues/3))
 * Global node, npm and yarn binaries are only searched from `/usr/local/bin`
   ([#2](https://github.com/Hilzu/node-shim/issues/2))
 
@@ -32,6 +26,18 @@ and run the `install.sh` script. By default it copies the necessary files to
 
 For the files to work you should have `~/bin` in your `$PATH` environment
 variable before paths that might have global node, npm or yarn binaries.
+
+After installation your node, npm and yarn binaries try to use the versions
+defined in the `engines` field in a `package.json` file found by traversing up
+in the file hierarchy. If no `package.json` with an `engines` field is found the
+shims use global installation of the programs.
+
+You can install new program versions with the `node-shim install` command:
+
+```bash
+node-shim install node 9.5.0
+node-shim install yarn 1.3.2
+```
 
 ## Environment variables
 
