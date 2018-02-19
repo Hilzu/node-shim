@@ -8,9 +8,9 @@ INSTALL_PATH=${INSTALL_PATH:-~/bin}
 mkdir -p "$INSTALL_PATH"
 
 if [ -f "bin/node-shim" ]; then
-  cp -R "bin/" "${INSTALL_PATH}"
+  cp bin/* "${INSTALL_PATH}"
 else
-  cp -RL "_build/install/default/bin/" "${INSTALL_PATH}"
+  cp -L _build/install/default/bin/* "${INSTALL_PATH}"
 fi
 
 for PROGRAM in node npm yarn
