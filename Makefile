@@ -1,10 +1,10 @@
 all: build test
 
 build:
-	jbuilder build @install
+	dune build @install
 
 test:
-	jbuilder runtest
+	dune runtest
 
 clean:
 	rm -rf _build _release

@@ -1,0 +1,4 @@
+(executables
+ (names main run install)
+ (public_names node-shim node-shim-run node-shim-install)
+ (libraries node-shim))

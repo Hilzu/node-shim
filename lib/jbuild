@@ -1,6 +1,0 @@
-(jbuild_version 1)
-
-(library (
-  (name node_shim)
-  (public_name node-shim)
-  (libraries (lwt.unix str unix yojson))))

@@ -64,21 +64,15 @@ export NODE_SHIM_YARN_VERSION=1.3.2
 
 Source code is available at [GitHub](https://github.com/Hilzu/node-shim).
 
+You need to install OPAM 2.0 using the instructions in the [documentation](https://opam.ocaml.org/doc/2.0/Install.html).
+
 ```bash
-# Install and init opam
-# You can install opam with Homebrew on macOS
-brew install opam
-opam init
+# Create a new local opam switch with the correct compiler
+cd node-shim/
+opam switch create . 4.07.0 --deps-only --with-test
 
-# Create a new opam switch with the correct compiler
-opam switch node-shim --alias-of 4.06.0
-eval `opam config env`
-
-# Pin package
-opam pin add node-shim . -n -y
-
-# Install dependecies
-opam install node-shim -t
+# If you already have a local switch you can update it with
+opam install . --deps-only --with-test
 
 # Compile everything and run tests
 make

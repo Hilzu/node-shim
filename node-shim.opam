@@ -1,4 +1,4 @@
-opam-version: "1.2"
+opam-version: "2.0"
 name: "node-shim"
 version: "0.0.6"
 maintainer: "Santeri Hiltunen <accounts.github@me.hilzu.moe>"
@@ -6,13 +6,19 @@ authors: "Santeri Hiltunen <accounts.github@me.hilzu.moe>"
 homepage: "https://github.com/Hilzu/node-shim"
 bug-reports: "https://github.com/Hilzu/node-shim/issues"
 license: "GPL-3.0+"
-dev-repo: "https://github.com/Hilzu/node-shim.git"
-build: [["jbuilder" "build" "-p" name "-j" jobs]]
-build-test: [["jbuilder" "runtest" "-p" name "-j" jobs]]
-available: [ (os = "darwin" | os = "linux") & ocaml-version = "4.06.1" ]
+dev-repo: "git+https://github.com/Hilzu/node-shim.git"
+build: [
+  [ "dune" "subst" ] {pinned}
+  [ "dune" "build" "-p" name "-j" jobs ]
+]
+run-test: [
+  [ "dune" "runtest" "-p" name "-j" jobs ]
+]
+available: [ os = "macos" | os = "linux" ]
 depends: [
+  "ocaml" {>= "4.07.0"}
   "lwt"
   "yojson"
-  "ounit" {test}
-  "jbuilder" {build}
+  "ounit" {with-test}
+  "dune" {build}
 ]

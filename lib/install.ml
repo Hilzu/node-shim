@@ -60,7 +60,7 @@ let install' program version =
   check_exists version_dir >>= fun () ->
   Unix_utils.mkdirp program_dir >>= fun () ->
   resolve_addr program version >>= fun address ->
-  Lwt_io.with_temp_file (fun (temp_file_name, temp_ch) ->
+  Lwt_io.with_temp_file (fun (temp_file_name, _) ->
     Lwt_io.printlf "Downloading from %s" address >>= fun () ->
     Unix_utils.download address temp_file_name >>= fun () ->
     Lwt_io.printl "Extracting archive..." >>= fun () ->

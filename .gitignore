@@ -27,3 +27,4 @@ setup.log
 _release
 *.install
 .merlin
+_opam
