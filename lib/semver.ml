@@ -26,12 +26,12 @@ let make range major minor patch =
 let string_of_range r = match r with
   | Minor -> "^"
   | Patch -> "~"
-  | None -> ""
+  | None -> "="
 
 let range_of_string s = match s with
   | "^" -> Minor
   | "~" -> Patch
-  | "" -> None
+  | "" | "=" -> None
   | _ -> raise (invalid_arg s)
 
 let to_version s = s.version
@@ -42,7 +42,7 @@ let to_string s =
 exception Invalid_semver of string
 
 let semver_regexp =
-  let range = "\\([~^]\\)?" in
+  let range = "\\([~^=]\\)?" in
   let num = "\\([0-9]+\\)" in
   let dot = "\\." in
   Str.regexp (range ^ num ^ dot ^ num ^ dot ^ num)
