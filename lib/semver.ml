@@ -47,7 +47,7 @@ let semver_regexp =
   let range = "\\([~^=<>]*\\)?" in
   let num = "\\([0-9]+\\)" in
   let dot = "\\." in
-  Str.regexp (range ^ num ^ dot ^ num ^ dot ^ num)
+  Str.regexp (range ^ num ^ dot ^ "?" ^ num ^ "?" ^ dot ^ "?" ^ num ^ "?")
 
 let whitespace_regexp = Str.regexp "[ \t\r\n]+"
 
@@ -57,8 +57,8 @@ let of_string s =
   then raise (Invalid_semver s) else
   let r = try Str.matched_group 1 s with Not_found -> "" in
   let major = int_of_string (Str.matched_group 2 s) in
-  let minor = int_of_string (Str.matched_group 3 s) in
-  let patch = int_of_string (Str.matched_group 4 s) in
+  let minor = try int_of_string (Str.matched_group 3 s) with Not_found -> 0 in
+  let patch = try int_of_string (Str.matched_group 4 s) with Not_found -> 0 in
   make (range_of_string r) major minor patch
 
 let min_version t = t.version

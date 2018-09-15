@@ -59,6 +59,16 @@ let suite = "Semver" >:::
     assert_semver (make Major 8 5 2) s
   );
 
+  "semver with major range and patch version missing" >:: (fun _ ->
+    let s = of_string ">= 8.5" in
+    assert_semver (make Major 8 5 0) s
+  );
+
+  "semver with major range and minor version missing" >:: (fun _ ->
+    let s = of_string ">= 8" in
+    assert_semver (make Major 8 0 0) s
+  );
+
   "exclusive max version with minor range" >:: (fun _ ->
     let s = exclusive_max_version (make Minor 1 0 0) in
     assert_version (Version.make 2 0 0) s
