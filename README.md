@@ -9,7 +9,7 @@ This app is a work in progress so a lot of features that you would expect are
 missing. Some known issues are:
 
 * No Windows support ([#4](https://github.com/Hilzu/node-shim/issues/4))
-* Only tilde and caret semver ranges are supported
+* No support for advanced semver ranges
   ([#7](https://github.com/Hilzu/node-shim/issues/7))
 * Global node, npm and yarn binaries are only searched from `/usr/local/bin`
   ([#2](https://github.com/Hilzu/node-shim/issues/2))
