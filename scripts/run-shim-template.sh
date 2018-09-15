@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
-set -euo pipefail
+#!/bin/sh
 
 exec node-shim-run $PROGRAM_PLACEHOLDER -- "$@"
