@@ -16,7 +16,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *)
 
-type range = Minor | Patch | None
+type range = Major | Minor | Patch | None
 
 type t = {version : Version.t; range : range }
 
@@ -24,11 +24,13 @@ let make range major minor patch =
   { range; version = Version.make major minor patch }
 
 let string_of_range r = match r with
+  | Major -> ">="
   | Minor -> "^"
   | Patch -> "~"
   | None -> "="
 
 let range_of_string s = match s with
+  | ">=" -> Major
   | "^" -> Minor
   | "~" -> Patch
   | "" | "=" -> None
@@ -42,7 +44,7 @@ let to_string s =
 exception Invalid_semver of string
 
 let semver_regexp =
-  let range = "\\([~^=]\\)?" in
+  let range = "\\([~^=<>]*\\)?" in
   let num = "\\([0-9]+\\)" in
   let dot = "\\." in
   Str.regexp (range ^ num ^ dot ^ num ^ dot ^ num)
@@ -65,6 +67,7 @@ let exclusive_max_version t =
   let v = t.version in
   let open Version in
   match t.range with
+  | Major -> { major = max_int; minor = 0; patch = 0 }
   | Minor -> { major = v.major + 1; minor = 0; patch = 0 }
   | Patch -> { v with minor = v.minor + 1; patch = 0 }
   | None -> { v with patch = v.patch + 1 }

@@ -54,6 +54,11 @@ let suite = "Semver" >:::
     assert_semver (make Patch 6 4 2) s
   );
 
+  "semver with major range" >:: (fun _ ->
+    let s = of_string ">= 8.5.2" in
+    assert_semver (make Major 8 5 2) s
+  );
+
   "exclusive max version with minor range" >:: (fun _ ->
     let s = exclusive_max_version (make Minor 1 0 0) in
     assert_version (Version.make 2 0 0) s
@@ -74,15 +79,38 @@ let suite = "Semver" >:::
     assert_version (Version.make 10 0 0) s
   );
 
-  "is_compatible" >:: (fun _ ->
-    let s = make Minor 8 9 3 in
-    let v = Version.make 8 10 0 in
-    assert_bool "is_compatible returned false" (is_compatible s v)
+  "exclusive max version with major range" >:: (fun _ ->
+    let s = exclusive_max_version (make Major 8 10 2) in
+    assert_version (Version.make max_int 0 0) s
   );
 
-  "is_compatible" >:: (fun _ ->
+  "is_compatible with exact range" >:: (fun _ ->
+    let s = make None 8 9 3 in
+    let v = Version.make 8 9 0 in
+    assert_bool "version should not have been compatible" (not (is_compatible s v));
+    let v = Version.make 8 9 3 in
+    assert_bool "version should have been compatible" (is_compatible s v)
+  );
+
+  "is_compatible with minor range" >:: (fun _ ->
+    let s = make Minor 8 9 3 in
+    let v = Version.make 8 10 0 in
+    assert_bool "version should have been compatible" (is_compatible s v)
+  );
+
+  "is_compatible with patch range" >:: (fun _ ->
     let s = make Patch 8 9 3 in
     let v = Version.make 8 10 0 in
-    assert_bool "is_compatible returned true" (not (is_compatible s v))
+    assert_bool "version should not have been compatible" (not (is_compatible s v))
+  );
+
+  "is_compatible with major range" >:: (fun _ ->
+    let s = make Major 8 9 3 in
+    let v = Version.make 10 10 0 in
+    assert_bool "version should have been compatible" (is_compatible s v);
+    let v = Version.make 8 9 3 in
+    assert_bool "version should have been compatible" (is_compatible s v);
+    let v = Version.make 8 9 2 in
+    assert_bool "version should not have been compatible" (not (is_compatible s v))
   );
 ]

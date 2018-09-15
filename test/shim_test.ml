@@ -58,4 +58,10 @@ let suite = "Shim" >:::
         find_version (S.make S.Minor 2 0 0) ["1.0.0"; "1.6.3"; "0.1.4"; "22.52.22"; "1.4.65"]
       )
   );
+
+  "Highest compatible version with Major semver range and bunch of versions" >:: (
+    fun _ ->
+      let v = find_version (S.make S.Major 8 9 1) ["9.1.0"; "8.9.1"; "10.5.2"; "8.11.7"] in
+      assert_version (V.make 10 5 2) v
+  );
 ]
