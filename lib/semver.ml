@@ -47,8 +47,12 @@ let semver_regexp =
   let dot = "\\." in
   Str.regexp (range ^ num ^ dot ^ num ^ dot ^ num)
 
+let whitespace_regexp = Str.regexp "[ \t\r\n]+"
+
 let of_string s =
-  if not (Str.string_match semver_regexp s 0) then raise (Invalid_semver s) else
+  let s = Str.global_replace whitespace_regexp "" s in
+  if not (Str.string_match semver_regexp s 0)
+  then raise (Invalid_semver s) else
   let r = try Str.matched_group 1 s with Not_found -> "" in
   let major = int_of_string (Str.matched_group 2 s) in
   let minor = int_of_string (Str.matched_group 3 s) in

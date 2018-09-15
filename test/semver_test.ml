@@ -39,6 +39,11 @@ let suite = "Semver" >:::
     assert_semver (make None 0 0 1) s
   );
 
+  "semver with equals range specifier and spaces" >:: (fun _ ->
+    let s = of_string " = 0.0.1 " in
+    assert_semver (make None 0 0 1) s
+  );
+
   "semver with caret range specifier" >:: (fun _ ->
     let s = of_string "^1.1.1" in
     assert_semver (make Minor 1 1 1) s
