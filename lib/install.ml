@@ -35,7 +35,7 @@ let resolve_addr program version =
   let open Program in
   let a = match program with
   | Node -> Printf.sprintf "https://nodejs.org/dist/v%s/node-v%s-%s-%s.tar.gz" v v p a
-  | Npm -> Printf.sprintf "https://github.com/npm/npm/archive/v%s.tar.gz" v
+  | Npm -> Printf.sprintf "https://github.com/npm/cli/archive/v%s.tar.gz" v
   | Yarn -> Printf.sprintf "https://github.com/yarnpkg/yarn/releases/download/v%s/yarn-v%s.tar.gz" v v
   in Lwt.return a
 
@@ -45,7 +45,7 @@ let extracted_dir_name program version =
   let open Program in
   let n = match program with
   | Node -> Printf.sprintf "node-v%s-%s-%s" v p a
-  | Npm -> Printf.sprintf "npm-%s" v
+  | Npm -> Printf.sprintf "cli-%s" v
   | Yarn -> Printf.sprintf "yarn-v%s" v
   in Lwt.return n
 
