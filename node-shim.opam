@@ -16,7 +16,7 @@ run-test: [
 ]
 available: [ os = "macos" | os = "linux" ]
 depends: [
-  "ocaml" {>= "4.07.0"}
+  "ocaml" {>= "4.07.1"}
   "lwt"
   "yojson"
   "ounit" {with-test}
