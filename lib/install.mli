@@ -17,3 +17,5 @@
 *)
 
 val install : Program.t -> Version.t -> unit
+
+val install_latest : Program.t -> unit

@@ -38,5 +38,8 @@ let mkdirp path =
 let download url target =
   exec [|"wget"; "--quiet"; "-O"; target; url|]
 
+let get_url url =
+  Lwt_process.pread ("", [|"wget"; "-qO-"; url|])
+
 let extract archive target_dir =
   exec [|"tar"; "-xzf"; archive; "-C"; target_dir|]

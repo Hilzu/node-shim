@@ -18,7 +18,8 @@
 
 open Node_shim
 
-let usage = "Usage: node-shim-install <program> <version>"
+let usage = "Usage: node-shim-install <program> [version]\n\n" ^
+  "If version is not given will install latest stable version of program.\n"
 
 let () =
   let arg_spec = [] in
@@ -32,8 +33,8 @@ let () =
   in
   Arg.parse arg_spec parse_anon usage;
   match (!program, !version) with
-  | None, _
-  | _, None ->
+  | None, _ ->
     Arg.usage arg_spec usage;
     exit 1
+  | Some p, None -> Install.install_latest p
   | Some p, Some v -> Install.install p v
