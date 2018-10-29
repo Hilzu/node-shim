@@ -44,22 +44,39 @@ let to_string s =
 exception Invalid_semver of string
 
 let semver_regexp =
-  let range = "\\([~^=<>]*\\)?" in
-  let num = "\\([0-9]+\\)" in
-  let dot = "\\." in
-  Str.regexp (range ^ num ^ dot ^ "?" ^ num ^ "?" ^ dot ^ "?" ^ num ^ "?")
+  let range = "\\([~^=<>*]*\\)?" in
+  let num = "\\([0-9x]+\\)?" in
+  let dot = "\\.?" in
+  Str.regexp ("^" ^ range ^ num ^ dot ^ num ^ dot ^ num ^ "$")
 
 let whitespace_regexp = Str.regexp "[ \t\r\n]+"
 
 let of_string s =
   let s = Str.global_replace whitespace_regexp "" s in
-  if not (Str.string_match semver_regexp s 0)
-  then raise (Invalid_semver s) else
-  let r = try Str.matched_group 1 s with Not_found -> "" in
-  let major = int_of_string (Str.matched_group 2 s) in
-  let minor = try int_of_string (Str.matched_group 3 s) with Not_found -> 0 in
-  let patch = try int_of_string (Str.matched_group 4 s) with Not_found -> 0 in
-  make (range_of_string r) major minor patch
+  if not (Str.string_match semver_regexp s 0) then raise (Invalid_semver s) else
+  if s = "" || s = "*" then (make Major 0 0 0) else
+  let range = ref
+    (try range_of_string (Str.matched_group 1 s) with Not_found -> Exact)
+  in
+  let parse_part i r =
+    try
+      let group = Str.matched_group i s in
+      if group = "x" then raise Not_found else
+      int_of_string group
+    with Not_found ->
+      if !range = Exact then range := r;
+      0
+  in
+  let major = parse_part 2 Major in
+  let minor = parse_part 3 Minor in
+  let patch = parse_part 4 Patch in
+  if major = 0 then range := (
+    match !range with
+    | Major -> Minor
+    | Minor -> Patch
+    | Patch | Exact -> Exact
+  );
+  make !range major minor patch
 
 let min_version t = t.version
 

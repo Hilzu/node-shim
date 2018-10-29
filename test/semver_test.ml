@@ -22,53 +22,103 @@ open Semver
 
 let assert_semver = assert_equal ~printer:to_string
 let assert_version = assert_equal ~printer:Version.to_string
-let suite = "Semver" >:::
-[
+
+let semver_suite = "Semver" >::: [
   "semver with no range specifier" >:: (fun _ ->
-    let s = of_string "1.2.3" in
-    assert_semver (make Exact 1 2 3) s
+    assert_semver (make Exact 1 2 3) (of_string "1.2.3")
   );
 
   "semver with no range specifier" >:: (fun _ ->
-    let s = of_string "0.0.1" in
-    assert_semver (make Exact 0 0 1) s
+    assert_semver (make Exact 0 0 1) (of_string "0.0.1")
   );
 
   "semver with equals range specifier" >:: (fun _ ->
-    let s = of_string "=0.0.1" in
-    assert_semver (make Exact 0 0 1) s
+    assert_semver (make Exact 0 0 1) (of_string "=0.0.1")
   );
 
   "semver with equals range specifier and spaces" >:: (fun _ ->
-    let s = of_string " = 0.0.1 " in
-    assert_semver (make Exact 0 0 1) s
+    assert_semver (make Exact 0 0 1) (of_string " = 0.0.1 ")
   );
 
-  "semver with caret range specifier" >:: (fun _ ->
-    let s = of_string "^1.1.1" in
-    assert_semver (make Minor 1 1 1) s
-  );
+  (* Following testcases are copied from Yarn documentation *)
+  (* https://yarnpkg.com/lang/en/docs/dependency-versions/ *)
+  (* Commented out specifiers are unsupported *)
+  "Comparators" >::: [
+    (* <2.0.0 *)
+    (* <=3.1.4 *)
+    (* >0.4.2 *)
 
-  "semver with tilde range specifier" >:: (fun _ ->
-    let s = of_string "~6.4.2" in
-    assert_semver (make Patch 6 4 2) s
-  );
+    ">=2.7.1" >:: (fun _ ->
+      assert_semver (make Major 2 7 1) (of_string ">=2.7.1")
+    );
 
-  "semver with major range" >:: (fun _ ->
-    let s = of_string ">= 8.5.2" in
-    assert_semver (make Major 8 5 2) s
-  );
+    "=4.6.6" >:: (fun _ ->
+      assert_semver (make Exact 4 6 6) (of_string "=4.6.6")
+    );
+  ];
 
-  "semver with major range and patch version missing" >:: (fun _ ->
-    let s = of_string ">= 8.5" in
-    assert_semver (make Major 8 5 0) s
-  );
+  (* Intersections *)
+  (* Unions *)
+  (* Pre-release tags *)
+  (* Hyphen ranges *)
 
-  "semver with major range and minor version missing" >:: (fun _ ->
-    let s = of_string ">= 8" in
-    assert_semver (make Major 8 0 0) s
-  );
+  "X-ranges" >::: [
+    "*" >:: (fun _ ->
+      assert_semver (make Major 0 0 0) (of_string "*")
+    );
 
+    "2.x" >:: (fun _ ->
+      assert_semver (make Minor 2 0 0) (of_string "2.x")
+    );
+
+    "3.1.x" >:: (fun _ ->
+      assert_semver (make Patch 3 1 0) (of_string "3.1.x")
+    );
+
+    "Empty" >:: (fun _ ->
+      assert_semver (make Major 0 0 0) (of_string "")
+    );
+
+    "2" >:: (fun _ ->
+      assert_semver (make Minor 2 0 0) (of_string "2")
+    );
+
+    "3.1" >:: (fun _ ->
+      assert_semver (make Patch 3 1 0) (of_string "3.1")
+    );
+  ];
+
+  "Tilde ranges" >::: [
+    "~3.1.4" >:: (fun _ ->
+      assert_semver (make Patch 3 1 4) (of_string "~3.1.4")
+    );
+
+    "~3.1" >:: (fun _ ->
+      assert_semver (make Patch 3 1 0) (of_string "~3.1")
+    );
+
+    (* ~3 *)
+  ];
+
+  "Caret ranges" >::: [
+    "^3.1.4" >:: (fun _ ->
+      assert_semver (make Minor 3 1 4) (of_string "^3.1.4")
+    );
+
+    "^0.4.2" >:: (fun _ ->
+      assert_semver (make Patch 0 4 2) (of_string "^0.4.2")
+    );
+
+    (* ^0.0.2 *)
+    (* ^0.0.x *)
+    (* ^0.0 *)
+    (* ^0.x *)
+    (* ^0 *)
+  ];
+]
+
+let compatibility_suite = "Compatibility" >:::
+[
   "exclusive max version with minor range" >:: (fun _ ->
     let s = exclusive_max_version (make Minor 1 0 0) in
     assert_version (Version.make 2 0 0) s
@@ -123,4 +173,9 @@ let suite = "Semver" >:::
     let v = Version.make 8 9 2 in
     assert_bool "version should not have been compatible" (not (is_compatible s v))
   );
+]
+
+let suite = "Semver_test" >::: [
+  semver_suite;
+  compatibility_suite;
 ]
