@@ -69,6 +69,16 @@ let install' program version =
   extracted_dir_name program version >>= fun extracted_dir ->
   Lwt_unix.rename (File.join [program_dir; extracted_dir]) version_dir
 
+let resolve_version program str =
+  try Lwt.return (Version.of_string str) with Version.Invalid_version _ ->
+  let semver = Semver.of_string str in
+  let program_name = Program.to_string program in
+  let semver_str = Semver.to_string semver in
+  let resolve_url = Printf.sprintf "https://semver.io/%s/resolve/%s" program_name semver_str in
+  Lwt_io.printlf "Resolving version %s of %s" semver_str program_name >>= fun () ->
+  Unix_utils.get_url resolve_url >>= fun version ->
+  Lwt.return (Version.of_string (String.trim version))
+
 let resolve_latest_version program =
   let program_name = Program.to_string program in
   let version_url = Printf.sprintf "https://semver.io/%s/stable" program_name in
@@ -80,8 +90,15 @@ let install_latest' program =
   resolve_latest_version program >>= fun version ->
   install' program version
 
+let install_resolve' program version_str =
+  resolve_version program version_str >>= fun version ->
+  install' program version
+
 let install program version =
   Lwt_main.run (install' program version)
 
 let install_latest program =
   Lwt_main.run (install_latest' program)
+
+let install_resolve program version_str =
+  Lwt_main.run (install_resolve' program version_str)

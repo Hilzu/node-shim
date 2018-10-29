@@ -19,7 +19,8 @@
 open Node_shim
 
 let usage = "Usage: node-shim-install <program> [version]\n\n" ^
-  "If version is not given will install latest stable version of program.\n"
+  "If version is not given will install latest stable version of program.\n" ^
+  "Version can also be a semver that is resolved to the latest compatible version.\n"
 
 let () =
   let arg_spec = [] in
@@ -28,7 +29,7 @@ let () =
   let parse_anon a =
     let current_arg = !Arg.current in
     if current_arg = 1 then program := Some (Program.of_string a)
-    else if current_arg = 2 then version := Some (Version.of_string a)
+    else if current_arg = 2 then version := Some a
     else raise (Arg.Bad "Too many arguments given")
   in
   Arg.parse arg_spec parse_anon usage;
@@ -37,4 +38,4 @@ let () =
     Arg.usage arg_spec usage;
     exit 1
   | Some p, None -> Install.install_latest p
-  | Some p, Some v -> Install.install p v
+  | Some p, Some s -> Install.install_resolve p s
