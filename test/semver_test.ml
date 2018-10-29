@@ -26,22 +26,22 @@ let suite = "Semver" >:::
 [
   "semver with no range specifier" >:: (fun _ ->
     let s = of_string "1.2.3" in
-    assert_semver (make None 1 2 3) s
+    assert_semver (make Exact 1 2 3) s
   );
 
   "semver with no range specifier" >:: (fun _ ->
     let s = of_string "0.0.1" in
-    assert_semver (make None 0 0 1) s
+    assert_semver (make Exact 0 0 1) s
   );
 
   "semver with equals range specifier" >:: (fun _ ->
     let s = of_string "=0.0.1" in
-    assert_semver (make None 0 0 1) s
+    assert_semver (make Exact 0 0 1) s
   );
 
   "semver with equals range specifier and spaces" >:: (fun _ ->
     let s = of_string " = 0.0.1 " in
-    assert_semver (make None 0 0 1) s
+    assert_semver (make Exact 0 0 1) s
   );
 
   "semver with caret range specifier" >:: (fun _ ->
@@ -95,7 +95,7 @@ let suite = "Semver" >:::
   );
 
   "is_compatible with exact range" >:: (fun _ ->
-    let s = make None 8 9 3 in
+    let s = make Exact 8 9 3 in
     let v = Version.make 8 9 0 in
     assert_bool "version should not have been compatible" (not (is_compatible s v));
     let v = Version.make 8 9 3 in

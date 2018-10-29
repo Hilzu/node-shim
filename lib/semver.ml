@@ -16,7 +16,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *)
 
-type range = Major | Minor | Patch | None
+type range = Major | Minor | Patch | Exact
 
 type t = {version : Version.t; range : range }
 
@@ -27,13 +27,13 @@ let string_of_range r = match r with
   | Major -> ">="
   | Minor -> "^"
   | Patch -> "~"
-  | None -> "="
+  | Exact -> "="
 
 let range_of_string s = match s with
   | ">=" -> Major
   | "^" -> Minor
   | "~" -> Patch
-  | "" | "=" -> None
+  | "" | "=" -> Exact
   | _ -> raise (invalid_arg s)
 
 let to_version s = s.version
@@ -70,6 +70,6 @@ let exclusive_max_version t =
   | Major -> { major = max_int; minor = 0; patch = 0 }
   | Minor -> { major = v.major + 1; minor = 0; patch = 0 }
   | Patch -> { v with minor = v.minor + 1; patch = 0 }
-  | None -> { v with patch = v.patch + 1 }
+  | Exact -> { v with patch = v.patch + 1 }
 
 let is_compatible t v = v >= min_version t && v < exclusive_max_version t

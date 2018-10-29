@@ -28,9 +28,9 @@ let find_version semver version_strs =
 let assert_version = assert_equal ~printer:Version.to_string
 let suite = "Shim" >:::
 [
-  "Highest compatible version with None semver range and one correct version" >:: (
+  "Highest compatible version with Exact semver range and one correct version" >:: (
     fun _ ->
-      let v = find_version (S.make S.None 1 0 0) ["1.0.0"] in
+      let v = find_version (S.make S.Exact 1 0 0) ["1.0.0"] in
       assert_version (V.make 1 0 0) v
   );
 
