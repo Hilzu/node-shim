@@ -5,6 +5,7 @@ build:
 
 test:
 	dune runtest
+	opam lint
 
 clean:
 	rm -rf _build _release
