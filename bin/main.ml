@@ -39,7 +39,7 @@ let () =
       if List.mem command_str commands then command := command_str
       else raise (Arg.Bad ("Unknown command: " ^ command_str))
   in
-  let () = Arg.parse (make_spec ()) parse_anon usage in
+  Arg.parse (make_spec ()) parse_anon usage;
   if !command = "" then (
     Arg.usage (make_spec ()) usage;
     exit 1 )
