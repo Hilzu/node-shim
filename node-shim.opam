@@ -1,6 +1,7 @@
 opam-version: "2.0"
 name: "node-shim"
 version: "0.2.0"
+synopsis: "Shim node, npm and yarn executables and use the correct version according to package.json engines"
 maintainer: "Santeri Hiltunen <accounts.github@me.hilzu.moe>"
 authors: "Santeri Hiltunen <accounts.github@me.hilzu.moe>"
 homepage: "https://github.com/Hilzu/node-shim"
@@ -17,8 +18,8 @@ run-test: [
 available: [ os = "macos" | os = "linux" ]
 depends: [
   "ocaml" {>= "4.07.0"}
-  "lwt"
-  "yojson"
-  "ounit" {with-test}
-  "dune" {build}
+  "lwt" {>= "1.5.0"}
+  "yojson" {>= "1.5.0"}
+  "ounit" {with-test >= "2.0.0"}
+  "dune" {build and >= "1.6.0"}
 ]
