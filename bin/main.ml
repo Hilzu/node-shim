@@ -16,40 +16,35 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *)
 
-let commands = [
-  "run";
-  "install";
-]
+let commands = ["run"; "install"]
 
-let usage = {|Usage: node-shim <command> [<args>]
-Valid commands: |} ^ String.concat " " commands
+let usage =
+  {|Usage: node-shim <command> [<args>]
+Valid commands: |}
+  ^ String.concat " " commands
 
 let help_doc = "Display this list of options"
 
 let () =
   let command = ref "" in
   let rec help_spec () =
-    if !command = ""
-    then raise (Arg.Help (Arg.usage_string (make_spec ()) usage))
-  and make_spec () = [
-    "-help", Arg.Unit help_spec, help_doc;
-    "--help", Arg.Unit help_spec, help_doc;
-  ] in
+    if !command = "" then
+      raise (Arg.Help (Arg.usage_string (make_spec ()) usage))
+  and make_spec () =
+    [ ("-help", Arg.Unit help_spec, help_doc)
+    ; ("--help", Arg.Unit help_spec, help_doc) ]
+  in
   let parse_anon command_str =
-    if !command = ""
-    then
-      if List.mem command_str commands
-      then command := command_str
+    if !command = "" then
+      if List.mem command_str commands then command := command_str
       else raise (Arg.Bad ("Unknown command: " ^ command_str))
   in
   let () = Arg.parse (make_spec ()) parse_anon usage in
-  if !command = ""
-  then begin
+  if !command = "" then (
     Arg.usage (make_spec ()) usage;
-    exit 1
-  end else
+    exit 1 )
+  else
     let base_path = Filename.dirname Sys.executable_name in
     let exec_path = Filename.concat base_path ("node-shim-" ^ !command) in
     let args = Array.sub Sys.argv 1 (Array.length Sys.argv - 1) in
-    args.(0) <- exec_path;
-    Unix.execv exec_path args
+    args.(0) <- exec_path; Unix.execv exec_path args

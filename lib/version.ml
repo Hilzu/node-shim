@@ -16,9 +16,9 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *)
 
-type t = { major : int; minor : int; patch : int; }
+type t = {major: int; minor: int; patch: int}
 
-let make major minor patch = { major; minor; patch }
+let make major minor patch = {major; minor; patch}
 
 let to_string t = Printf.sprintf "%d.%d.%d" t.major t.minor t.patch
 
@@ -32,7 +32,5 @@ let of_string s =
     let major = Str.matched_group 1 s in
     let minor = Str.matched_group 2 s in
     let patch = Str.matched_group 3 s in
-    try
-      make (int_of_string major) (int_of_string minor) (int_of_string patch)
-    with
-    | Failure _ -> raise (Invalid_version s)
+    try make (int_of_string major) (int_of_string minor) (int_of_string patch)
+    with Failure _ -> raise (Invalid_version s)

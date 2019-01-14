@@ -24,22 +24,20 @@ let string_of_process_status = function
   | Unix.WSTOPPED n -> Printf.sprintf "stopped by signal %d" n
 
 let exec args =
-  Lwt_process.exec ("", args) >>= function
+  Lwt_process.exec ("", args)
+  >>= function
   | Unix.WEXITED 0 -> Lwt.return ()
   | ps ->
-    Lwt.fail_with (
-      Printf.sprintf
-        "Failed to execute command '%s'. Failed with: %s"
-        args.(0) (string_of_process_status ps))
+      Lwt.fail_with
+        (Printf.sprintf "Failed to execute command '%s'. Failed with: %s"
+           args.(0)
+           (string_of_process_status ps))
 
-let mkdirp path =
-  exec [|"mkdir"; "-p"; path|]
+let mkdirp path = exec [|"mkdir"; "-p"; path|]
 
-let download url target =
-  exec [|"wget"; "--quiet"; "-O"; target; url|]
+let download url target = exec [|"wget"; "--quiet"; "-O"; target; url|]
 
-let get_url url =
-  Lwt_process.pread ("", [|"wget"; "-qO-"; url|])
+let get_url url = Lwt_process.pread ("", [|"wget"; "-qO-"; url|])
 
 let extract archive target_dir =
   exec [|"tar"; "-xzf"; archive; "-C"; target_dir|]

@@ -19,16 +19,12 @@
 module J = Yojson.Basic
 
 type engines =
-  {node : Semver.t option; npm : Semver.t option; yarn : Semver.t option}
+  {node: Semver.t option; npm: Semver.t option; yarn: Semver.t option}
 
-let make_engines node npm yarn =
-  { node; npm; yarn }
+let make_engines node npm yarn = {node; npm; yarn}
 
 let string_of_engines e =
-  let s o = match o with
-    | Some s -> Semver.to_string s
-    | None -> "None"
-  in
+  let s o = match o with Some s -> Semver.to_string s | None -> "None" in
   Printf.sprintf "node: %s, npm: %s, yarn: %s" (s e.node) (s e.npm) (s e.yarn)
 
 let find_package_json () =
@@ -42,8 +38,7 @@ let parse_engines_from_chan ch =
   let open J.Util in
   let engines_member = json |> member "engines" in
   let parse_semver_from m =
-    try
-      Some (Semver.of_string (engines_member |> member m |> to_string))
+    try Some (Semver.of_string (engines_member |> member m |> to_string))
     with _ -> None
   in
   let node = parse_semver_from "node" in

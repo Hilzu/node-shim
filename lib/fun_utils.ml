@@ -22,6 +22,6 @@ let memoize_const f =
     match !mem with
     | Some y -> y
     | None ->
-      let y = f x in
-      mem := Some y;
-      y
+        let y = f x in
+        mem := Some y;
+        y

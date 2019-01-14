@@ -21,7 +21,8 @@ open Lwt.Infix
 type platform = Darwin | Linux
 
 let platform' () =
-  Lwt_process.pread ("", [|"uname"; "-s"|]) >>= fun s ->
+  Lwt_process.pread ("", [|"uname"; "-s"|])
+  >>= fun s ->
   match String.trim s with
   | "Darwin" -> Lwt.return Darwin
   | "Linux" -> Lwt.return Linux

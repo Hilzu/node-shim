@@ -21,17 +21,15 @@ open Node_shim
 let parse_args () =
   let program_args = ref [] in
   let append_to_args a = program_args := a :: !program_args in
-  let arg_spec = [
-    ("--", Arg.Rest append_to_args, "Arguments passed to program");
-  ] in
+  let arg_spec =
+    [("--", Arg.Rest append_to_args, "Arguments passed to program")]
+  in
   let program = ref "" in
   let set_program s = program := s in
   let usage = "Usage: node-shim-run <program> -- [<program_args>]" in
   Arg.parse arg_spec set_program usage;
-  if !program = "" then begin
-    Arg.usage arg_spec usage;
-    exit 1
-  end else (Program.of_string !program, List.rev !program_args)
+  if !program = "" then ( Arg.usage arg_spec usage; exit 1 )
+  else (Program.of_string !program, List.rev !program_args)
 
 let get_version engines program =
   let open Package in
@@ -48,14 +46,15 @@ let program_version_env_var program =
 let get_version_from_package_json program =
   match Package.find_package_json_res () with
   | Error _ -> None
-  | Ok path ->
+  | Ok path -> (
       Logger.debug ("Found package.json: " ^ path);
       let ch = open_in path in
       let engines = Package.parse_engines_from_chan ch in
       Logger.debug ("Found engines: " ^ Package.string_of_engines engines);
       match get_version engines program with
       | None -> None
-      | Some semver -> Some (Shim.find_highest_available_version program semver)
+      | Some semver ->
+          Some (Shim.find_highest_available_version program semver) )
 
 let get_executable_path program =
   let global_exec = "/usr/local/bin/" ^ Program.to_string program in
@@ -64,8 +63,7 @@ let get_executable_path program =
     | Some v ->
         Logger.debug ("Found version from env: " ^ v);
         Some (Version.of_string v)
-    | None ->
-        get_version_from_package_json program
+    | None -> get_version_from_package_json program
   in
   match version_opt with
   | Some v ->
@@ -75,12 +73,14 @@ let get_executable_path program =
 
 let _ =
   try
-    let (program, program_args) = parse_args () in
+    let program, program_args = parse_args () in
     Logger.debug ("Finding executable for: " ^ Program.to_string program);
-    Logger.debug ("Arguments to pass to program: " ^ String.concat ", " program_args);
+    Logger.debug
+      ("Arguments to pass to program: " ^ String.concat ", " program_args);
     let exec = get_executable_path program in
     Logger.debug ("Found executable: " ^ exec);
-    flush_all (); (* Ensure that all output is written before moving control to exec *)
+    flush_all ();
+    (* Ensure that all output is written before moving control to exec *)
     Unix.execv exec (Array.of_list (exec :: program_args))
   with e ->
     Logger.error e;

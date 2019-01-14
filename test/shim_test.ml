@@ -26,42 +26,37 @@ let find_version semver version_strs =
   find_highest_compatible_version semver (List.map V.of_string version_strs)
 
 let assert_version = assert_equal ~printer:Version.to_string
-let suite = "Shim" >:::
-[
-  "Highest compatible version with Exact semver range and one correct version" >:: (
-    fun _ ->
-      let v = find_version (S.make S.Exact 1 0 0) ["1.0.0"] in
-      assert_version (V.make 1 0 0) v
-  );
 
-  "Highest compatible version with Patch semver range and one correct version" >:: (
-    fun _ ->
-      let v = find_version (S.make S.Patch 1 0 0) ["1.0.0"] in
-      assert_version (V.make 1 0 0) v
-  );
-
-  "Highest compatible version with Minor semver range and bunch of versions" >:: (
-    fun _ ->
-      let v = find_version (S.make S.Minor 1 0 0) ["1.0.0"; "1.6.3"; "0.1.4"; "22.52.22"; "1.4.65"] in
-      assert_version (V.make 1 6 3) v
-  );
-
-  "Highest compatible version with Minor semver range and bunch of versions" >:: (
-    fun _ ->
-      let v = find_version (S.make S.Minor 8 9 1) ["9.1.0"; "8.9.1"] in
-      assert_version (V.make 8 9 1) v
-  );
-
-  "Highest compatible version raises exception when no version found" >:: (
-    fun _ ->
-      assert_raises No_compatible_version_found (fun () ->
-        find_version (S.make S.Minor 2 0 0) ["1.0.0"; "1.6.3"; "0.1.4"; "22.52.22"; "1.4.65"]
-      )
-  );
-
-  "Highest compatible version with Major semver range and bunch of versions" >:: (
-    fun _ ->
-      let v = find_version (S.make S.Major 8 9 1) ["9.1.0"; "8.9.1"; "10.5.2"; "8.11.7"] in
-      assert_version (V.make 10 5 2) v
-  );
-]
+let suite =
+  "Shim"
+  >::: [ ( "Highest compatible version with Exact semver range and one correct version"
+         >:: fun _ ->
+         let v = find_version (S.make S.Exact 1 0 0) ["1.0.0"] in
+         assert_version (V.make 1 0 0) v )
+       ; ( "Highest compatible version with Patch semver range and one correct version"
+         >:: fun _ ->
+         let v = find_version (S.make S.Patch 1 0 0) ["1.0.0"] in
+         assert_version (V.make 1 0 0) v )
+       ; ( "Highest compatible version with Minor semver range and bunch of versions"
+         >:: fun _ ->
+         let v =
+           find_version (S.make S.Minor 1 0 0)
+             ["1.0.0"; "1.6.3"; "0.1.4"; "22.52.22"; "1.4.65"]
+         in
+         assert_version (V.make 1 6 3) v )
+       ; ( "Highest compatible version with Minor semver range and bunch of versions"
+         >:: fun _ ->
+         let v = find_version (S.make S.Minor 8 9 1) ["9.1.0"; "8.9.1"] in
+         assert_version (V.make 8 9 1) v )
+       ; ( "Highest compatible version raises exception when no version found"
+         >:: fun _ ->
+         assert_raises No_compatible_version_found (fun () ->
+             find_version (S.make S.Minor 2 0 0)
+               ["1.0.0"; "1.6.3"; "0.1.4"; "22.52.22"; "1.4.65"] ) )
+       ; ( "Highest compatible version with Major semver range and bunch of versions"
+         >:: fun _ ->
+         let v =
+           find_version (S.make S.Major 8 9 1)
+             ["9.1.0"; "8.9.1"; "10.5.2"; "8.11.7"]
+         in
+         assert_version (V.make 10 5 2) v ) ]

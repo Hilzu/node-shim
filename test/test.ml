@@ -16,12 +16,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *)
 
-open OUnit2;;
+open OUnit2
 
-let tests = "Tests" >::: [
-  Semver_test.suite;
-  Shim_test.suite;
-]
+let tests = "Tests" >::: [Semver_test.suite; Shim_test.suite]
 
-let _ =
-  run_test_tt_main tests
+let _ = run_test_tt_main tests

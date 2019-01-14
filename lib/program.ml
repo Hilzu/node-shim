@@ -27,11 +27,7 @@ let of_string s =
   | "yarn" -> Yarn
   | _ -> raise (Invalid_program s)
 
-let to_string p =
-  match p with
-  | Node -> "node"
-  | Npm -> "npm"
-  | Yarn -> "yarn"
+let to_string p = match p with Node -> "node" | Npm -> "npm" | Yarn -> "yarn"
 
 let bin_path program =
   match program with

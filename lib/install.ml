@@ -19,86 +19,104 @@
 open Lwt.Infix
 
 let get_system_strings () =
-  Lwt.wrap Sys_utils.architecture >>= fun a ->
-  Sys_utils.platform () >>= fun p ->
-  let a_str = match a with
-  | X86 -> "x86"
-  | X64 -> "x64" in
-  let p_str = match p with
-  | Darwin -> "darwin"
-  | Linux -> "linux" in
+  Lwt.wrap Sys_utils.architecture
+  >>= fun a ->
+  Sys_utils.platform ()
+  >>= fun p ->
+  let a_str = match a with X86 -> "x86" | X64 -> "x64" in
+  let p_str = match p with Darwin -> "darwin" | Linux -> "linux" in
   Lwt.return (a_str, p_str)
 
 let resolve_addr program version =
   let v = Version.to_string version in
-  get_system_strings () >>= fun (a, p) ->
+  get_system_strings ()
+  >>= fun (a, p) ->
   let open Program in
-  let a = match program with
-  | Node -> Printf.sprintf "https://nodejs.org/dist/v%s/node-v%s-%s-%s.tar.gz" v v p a
-  | Npm -> Printf.sprintf "https://github.com/npm/cli/archive/v%s.tar.gz" v
-  | Yarn -> Printf.sprintf "https://github.com/yarnpkg/yarn/releases/download/v%s/yarn-v%s.tar.gz" v v
-  in Lwt.return a
+  let a =
+    match program with
+    | Node ->
+        Printf.sprintf "https://nodejs.org/dist/v%s/node-v%s-%s-%s.tar.gz" v v
+          p a
+    | Npm -> Printf.sprintf "https://github.com/npm/cli/archive/v%s.tar.gz" v
+    | Yarn ->
+        Printf.sprintf
+          "https://github.com/yarnpkg/yarn/releases/download/v%s/yarn-v%s.tar.gz"
+          v v
+  in
+  Lwt.return a
 
 let extracted_dir_name program version =
   let v = Version.to_string version in
-  get_system_strings () >>= fun (a, p) ->
+  get_system_strings ()
+  >>= fun (a, p) ->
   let open Program in
-  let n = match program with
-  | Node -> Printf.sprintf "node-v%s-%s-%s" v p a
-  | Npm -> Printf.sprintf "cli-%s" v
-  | Yarn -> Printf.sprintf "yarn-v%s" v
-  in Lwt.return n
+  let n =
+    match program with
+    | Node -> Printf.sprintf "node-v%s-%s-%s" v p a
+    | Npm -> Printf.sprintf "cli-%s" v
+    | Yarn -> Printf.sprintf "yarn-v%s" v
+  in
+  Lwt.return n
 
 let check_exists path =
-  if Sys.file_exists path
-  then Lwt.fail_with (Printf.sprintf "%s already exists" path)
+  if Sys.file_exists path then
+    Lwt.fail_with (Printf.sprintf "%s already exists" path)
   else Lwt.return ()
 
 let install' program version =
   let program_dir = Shim.versions_path program in
   let version_dir = File.join [program_dir; Version.to_string version] in
-  check_exists version_dir >>= fun () ->
-  Unix_utils.mkdirp program_dir >>= fun () ->
-  resolve_addr program version >>= fun address ->
+  check_exists version_dir
+  >>= fun () ->
+  Unix_utils.mkdirp program_dir
+  >>= fun () ->
+  resolve_addr program version
+  >>= fun address ->
   Lwt_io.with_temp_file (fun (temp_file_name, _) ->
-    Lwt_io.printlf "Downloading from %s" address >>= fun () ->
-    Unix_utils.download address temp_file_name >>= fun () ->
-    Lwt_io.printl "Extracting archive..." >>= fun () ->
-    Unix_utils.extract temp_file_name program_dir
-  ) >>= fun () ->
-  extracted_dir_name program version >>= fun extracted_dir ->
+      Lwt_io.printlf "Downloading from %s" address
+      >>= fun () ->
+      Unix_utils.download address temp_file_name
+      >>= fun () ->
+      Lwt_io.printl "Extracting archive..."
+      >>= fun () -> Unix_utils.extract temp_file_name program_dir )
+  >>= fun () ->
+  extracted_dir_name program version
+  >>= fun extracted_dir ->
   Lwt_unix.rename (File.join [program_dir; extracted_dir]) version_dir
 
 let resolve_version program str =
   try Lwt.return (Version.of_string str) with Version.Invalid_version _ ->
-  let semver = Semver.of_string str in
-  let program_name = Program.to_string program in
-  let semver_str = Semver.to_string semver in
-  let resolve_url = Printf.sprintf "https://semver.io/%s/resolve/%s" program_name semver_str in
-  Lwt_io.printlf "Resolving version %s of %s" semver_str program_name >>= fun () ->
-  Unix_utils.get_url resolve_url >>= fun version ->
-  Lwt.return (Version.of_string (String.trim version))
+    let semver = Semver.of_string str in
+    let program_name = Program.to_string program in
+    let semver_str = Semver.to_string semver in
+    let resolve_url =
+      Printf.sprintf "https://semver.io/%s/resolve/%s" program_name semver_str
+    in
+    Lwt_io.printlf "Resolving version %s of %s" semver_str program_name
+    >>= fun () ->
+    Unix_utils.get_url resolve_url
+    >>= fun version -> Lwt.return (Version.of_string (String.trim version))
 
 let resolve_latest_version program =
   let program_name = Program.to_string program in
-  let version_url = Printf.sprintf "https://semver.io/%s/stable" program_name in
-  Lwt_io.printlf "Resolving latest stable version of %s" program_name >>= fun () ->
-  Unix_utils.get_url version_url >>= fun version ->
-  Lwt.return (Version.of_string (String.trim version))
+  let version_url =
+    Printf.sprintf "https://semver.io/%s/stable" program_name
+  in
+  Lwt_io.printlf "Resolving latest stable version of %s" program_name
+  >>= fun () ->
+  Unix_utils.get_url version_url
+  >>= fun version -> Lwt.return (Version.of_string (String.trim version))
 
 let install_latest' program =
-  resolve_latest_version program >>= fun version ->
-  install' program version
+  resolve_latest_version program >>= fun version -> install' program version
 
 let install_resolve' program version_str =
-  resolve_version program version_str >>= fun version ->
-  install' program version
+  resolve_version program version_str
+  >>= fun version -> install' program version
 
-let install program version =
-  Lwt_main.run (install' program version)
+let install program version = Lwt_main.run (install' program version)
 
-let install_latest program =
-  Lwt_main.run (install_latest' program)
+let install_latest program = Lwt_main.run (install_latest' program)
 
 let install_resolve program version_str =
   Lwt_main.run (install_resolve' program version_str)
