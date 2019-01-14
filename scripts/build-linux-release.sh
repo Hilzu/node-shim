@@ -4,10 +4,11 @@ set -euo pipefail
 
 cd "${0%/*}/.."
 
-docker build -t node-shim-build --pull .
+workdir='/opt/node-shim-build'
+docker build -t node-shim-build --pull --build-arg workdir="${workdir}" .
 
 container_id="$(docker create --entrypoint='sleep 1d' node-shim-build:latest)"
 
-docker cp "${container_id}:/opt/node-shim/_release/." _release/
+docker cp "${container_id}:${workdir}/_release/." _release/
 
 docker rm -f "${container_id}"

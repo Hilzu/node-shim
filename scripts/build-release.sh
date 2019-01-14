@@ -28,11 +28,11 @@ esac
 echo "Building release for version $VERSION and platform $PLATFORM"
 
 make clean
-make
+dune build -p node-shim
 
 RELEASE_NAME="node-shim-${VERSION}-${PLATFORM}"
 RELEASE_PATH="_release/$RELEASE_NAME"
-rm -rf _release
+
 mkdir -p "$RELEASE_PATH"
 cp LICENSE.txt README.md "$RELEASE_PATH"
 
@@ -43,7 +43,7 @@ mkdir "$RELEASE_PATH/bin"
 cp _build/install/default/bin/* "$RELEASE_PATH/bin"
 
 mkdir "$RELEASE_PATH/src"
-cp -R bin lib test Makefile node-shim.opam "$RELEASE_PATH/src"
+cp -R bin lib test Makefile dune-project node-shim.opam "$RELEASE_PATH/src"
 
 cd _release
 tar cvzf $RELEASE_NAME.tgz $RELEASE_NAME

@@ -13,4 +13,7 @@ clean:
 install: build
 	scripts/install.sh
 
-.PHONY: default clean install all test build
+release: clean test
+	scripts/build-release.sh
+
+.PHONY: default clean install all test build release
