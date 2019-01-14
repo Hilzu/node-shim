@@ -16,4 +16,7 @@ install: build
 release: clean test
 	scripts/build-release.sh
 
-.PHONY: default clean install all test build release
+format:
+	dune build @fmt --auto-promote
+
+.PHONY: default clean install all test build release format
