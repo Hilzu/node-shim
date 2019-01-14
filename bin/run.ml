@@ -43,18 +43,26 @@ let program_version_env_var program =
   let s = String.uppercase_ascii (Program.to_string program) in
   Printf.sprintf "NODE_SHIM_%s_VERSION" s
 
-let get_version_from_package_json program =
-  match Package.find_package_json_res () with
+let rec get_version_from_package_json ?(dir = Sys.getcwd ()) program =
+  match Package.find_package_json_res dir with
   | Error _ -> None
   | Ok path -> (
       Logger.debug ("Found package.json: " ^ path);
       let ch = open_in path in
       let engines = Package.parse_engines_from_chan ch in
-      Logger.debug ("Found engines: " ^ Package.string_of_engines engines);
-      match get_version engines program with
-      | None -> None
-      | Some semver ->
-          Some (Shim.find_highest_available_version program semver) )
+      match engines with
+      | None ->
+          if path = File.root_dir then None
+          else (
+            Logger.debug "Found package.json without engines. Traversing up...";
+            let parent_dir = File.parent_dir (Filename.dirname path) in
+            get_version_from_package_json ~dir:parent_dir program )
+      | Some engines -> (
+          Logger.debug ("Found engines: " ^ Package.string_of_engines engines);
+          match get_version engines program with
+          | None -> None
+          | Some semver ->
+              Some (Shim.find_highest_available_version program semver) ) )
 
 let get_executable_path program =
   let global_exec = "/usr/local/bin/" ^ Program.to_string program in
