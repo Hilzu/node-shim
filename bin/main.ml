@@ -25,6 +25,10 @@ Valid commands: |}
 
 let help_doc = "Display this list of options"
 
+let print_version () =
+  print_endline "%%VERSION%%";
+  exit 0
+
 let () =
   let command = ref "" in
   let rec help_spec () =
@@ -32,7 +36,8 @@ let () =
       raise (Arg.Help (Arg.usage_string (make_spec ()) usage))
   and make_spec () =
     [ ("-help", Arg.Unit help_spec, help_doc)
-    ; ("--help", Arg.Unit help_spec, help_doc) ]
+    ; ("--help", Arg.Unit help_spec, help_doc)
+    ; ("--version", Arg.Unit print_version, "Print node-shim version")]
   in
   let parse_anon command_str =
     if !command = "" then

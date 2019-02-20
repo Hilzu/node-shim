@@ -10,8 +10,8 @@ test:
 clean:
 	rm -rf _build _release
 
-install: build
-	scripts/install.sh
+install:
+	opam install . --working-dir
 
 release: clean test
 	scripts/build-release.sh
