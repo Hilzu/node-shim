@@ -1,6 +1,6 @@
 opam-version: "2.0"
 name: "node-shim"
-version: "0.2.0"
+version: "0.2.1"
 synopsis: "Shim node, npm and yarn executables and use the correct version according to package.json engines"
 maintainer: "Santeri Hiltunen <accounts.github@me.hilzu.moe>"
 authors: "Santeri Hiltunen <accounts.github@me.hilzu.moe>"
